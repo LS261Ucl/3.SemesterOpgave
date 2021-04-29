@@ -1,4 +1,6 @@
-﻿using Delpin.Infrastructure.Data;
+﻿using Delpin.Application.Interfaces;
+using Delpin.Infrastructure.Data;
+using Delpin.Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,8 @@ namespace Delpin.Infrastructure
             {
                 opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         }
     }
 }
