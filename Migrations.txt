@@ -1,0 +1,1 @@
+Add-Migration InitialCreate -s Delpin.API -p Delpin.Infrastructure -o .\Data\Migrations
