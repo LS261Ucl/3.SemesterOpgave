@@ -1,5 +1,3 @@
-using System;
-
 namespace Delpin.MVC.Models
 {
     public class ErrorViewModel
