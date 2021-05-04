@@ -9,6 +9,7 @@ namespace Delpin.Application.Contracts.v1.ProductCategories
         {
             CreateMap<ProductCategory, ProductCategoryDto>();
             CreateMap<CreateProductCategoryDto, ProductCategory>();
+            CreateMap<UpdateProductCategoryDto, ProductCategory>();
         }
     }
 }
