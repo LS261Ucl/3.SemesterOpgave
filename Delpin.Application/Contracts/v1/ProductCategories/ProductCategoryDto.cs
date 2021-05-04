@@ -1,6 +1,4 @@
-﻿using Delpin.Domain.Entities;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace Delpin.Application.Contracts.v1.ProductCategories
 {
@@ -9,6 +7,6 @@ namespace Delpin.Application.Contracts.v1.ProductCategories
         public Guid Id { get; set; }
         public string Name { get; set; }
         public byte[] Image { get; set; }
-        public ICollection<ProductGroup> ProductGroups { get; set; }
+        //public ICollection<ProductGroupDto> ProductGroups { get; set; }
     }
 }

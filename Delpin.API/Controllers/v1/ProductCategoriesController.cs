@@ -37,12 +37,11 @@ namespace Delpin.API.Controllers.v1
             return Ok(_mapper.Map<IReadOnlyList<ProductCategoryDto>>(categories));
         }
 
-        [HttpGet("{id:guid}")]
+        [HttpGet("{id:guid}", Name = "GetProductCategory")]
         public async Task<ActionResult<ProductCategoryDto>> Get(Guid id)
         {
             var category = await _categoryRepository.GetAsync(x => x.Id == id, includes: x => x.Include(p => p.ProductGroups));
 
-            // FIX CYCLES
             if (category == null)
             {
                 _logger.LogInformation($"No {nameof(ProductCategory)} was found with id: {id}");
@@ -62,7 +61,36 @@ namespace Delpin.API.Controllers.v1
             if (!created)
                 return BadRequest();
 
-            return Ok(_mapper.Map<ProductCategoryDto>(category));
+            return CreatedAtAction(nameof(Get), new { id = category.Id }, _mapper.Map<ProductCategoryDto>(category));
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<ActionResult> Update(Guid id, UpdateProductCategoryDto requestDto)
+        {
+            var categoryToUpdate = await _categoryRepository.GetAsync(x => x.Id == id);
+
+            if (categoryToUpdate == null)
+                return NotFound();
+
+            _mapper.Map(requestDto, categoryToUpdate);
+
+            bool updated = await _categoryRepository.UpdateAsync(categoryToUpdate);
+
+            if (!updated)
+                return BadRequest();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult> Delete(Guid id)
+        {
+            bool deleted = await _categoryRepository.DeleteAsync(id);
+
+            if (!deleted)
+                return NotFound();
+
+            return NoContent();
         }
     }
 }
