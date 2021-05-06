@@ -8,6 +8,9 @@ namespace Delpin.Application.Contracts.v1.ProductGroups
         public MappingProfile()
         {
             CreateMap<ProductGroup, ProductGroupDto>();
+            CreateMap<CreateProductGroupDto, ProductGroup>();
+            CreateMap<UpdateProdcutGroupDto, ProductGroup>();
+
         }
     }
 }
