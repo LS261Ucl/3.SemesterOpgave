@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Delpin.API.Controllers.v1
 {
-   
+
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -21,7 +21,7 @@ namespace Delpin.API.Controllers.v1
         private readonly IMapper _mapper;
         private readonly ILogger<ProductItemsController> _logger;
 
-        public ProductItemsController(IGenericRepository<ProductItem> itemRepository, IMapper mapper, 
+        public ProductItemsController(IGenericRepository<ProductItem> itemRepository, IMapper mapper,
             ILogger<ProductItemsController> logger)
         {
             _itemRepository = itemRepository;
@@ -30,10 +30,10 @@ namespace Delpin.API.Controllers.v1
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductItemDto>>> GetAll(string orderBy)
+        public async Task<ActionResult<IReadOnlyList<ProductItemDto>>> GetAll(string orderBy, Guid? productId)
         {
             var items = await _itemRepository
-                .GetAllAsync(includes: x => x.Include(pi => pi.PostalCity).Include(p => p.Product) ,  orderBy: new ProductItemOrderBy().Sorting(orderBy));
+                .GetAllAsync(criteria: productId != null ? x => x.ProductId == productId : null, includes: x => x.Include(pi => pi.PostalCity).Include(p => p.Product), orderBy: new ProductItemOrderBy().Sorting(orderBy));
 
             return Ok(_mapper.Map<IReadOnlyList<ProductItemDto>>(items));
         }
