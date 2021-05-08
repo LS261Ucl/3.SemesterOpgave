@@ -1,17 +1,16 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoMapper;
 using Delpin.Application.Contracts.v1.ProductCategories;
 using Delpin.Application.Interfaces;
 using Delpin.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Delpin.API.Controllers.v1
 {
-
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -21,7 +20,8 @@ namespace Delpin.API.Controllers.v1
         private readonly IMapper _mapper;
         private readonly ILogger<ProductCategoriesController> _logger;
 
-        public ProductCategoriesController(IGenericRepository<ProductCategory> categoryRepository, IMapper mapper, ILogger<ProductCategoriesController> logger)
+        public ProductCategoriesController(IGenericRepository<ProductCategory> categoryRepository, IMapper mapper,
+            ILogger<ProductCategoriesController> logger)
         {
             _categoryRepository = categoryRepository;
             _mapper = mapper;
@@ -40,7 +40,8 @@ namespace Delpin.API.Controllers.v1
         [HttpGet("{id:guid}", Name = "GetProductCategory")]
         public async Task<ActionResult<ProductCategoryDto>> Get(Guid id)
         {
-            var category = await _categoryRepository.GetAsync(x => x.Id == id, includes: x => x.Include(p => p.ProductGroups));
+            var category = await _categoryRepository
+                .GetAsync(x => x.Id == id, x => x.Include(p => p.ProductGroups));
 
             if (category == null)
             {
@@ -59,7 +60,11 @@ namespace Delpin.API.Controllers.v1
             bool created = await _categoryRepository.CreateAsync(category);
 
             if (!created)
+            {
+                _logger.LogInformation(
+                    $"Unable to create {nameof(ProductCategory)}. Please check model and try again.");
                 return BadRequest();
+            }
 
             return CreatedAtAction(nameof(Get), new { id = category.Id }, _mapper.Map<ProductCategoryDto>(category));
         }
@@ -70,14 +75,20 @@ namespace Delpin.API.Controllers.v1
             var categoryToUpdate = await _categoryRepository.GetAsync(x => x.Id == id);
 
             if (categoryToUpdate == null)
+            {
+                _logger.LogInformation($"No {nameof(ProductCategory)} was found with id: {id}");
                 return NotFound();
+            }
 
             _mapper.Map(requestDto, categoryToUpdate);
 
             bool updated = await _categoryRepository.UpdateAsync(categoryToUpdate);
 
             if (!updated)
+            {
+                _logger.LogInformation($"Error updating {nameof(ProductCategory)} id: {id}");
                 return BadRequest();
+            }
 
             return NoContent();
         }
@@ -88,7 +99,10 @@ namespace Delpin.API.Controllers.v1
             bool deleted = await _categoryRepository.DeleteAsync(id);
 
             if (!deleted)
+            {
+                _logger.LogInformation($"Unable to find/delete {nameof(ProductCategory)} with id: {id}");
                 return NotFound();
+            }
 
             return NoContent();
         }

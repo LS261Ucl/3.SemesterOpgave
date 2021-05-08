@@ -45,7 +45,7 @@ namespace Delpin.API.Controllers.v1
         public async Task<ActionResult<RentalDto>> Get(Guid id)
         {
             var rental = await _rentalRepository.GetAsync(x => x.Id == id,
-                x => x.Include(r => r.PostalCity).Include(r => r.RentalLines).ThenInclude(rl => rl.ProductItem));
+                x => x.Include(r => r.PostalCity).Include(r => r.RentalLines).ThenInclude(rl => rl.ProductItem).ThenInclude(pi => pi.PostalCity));
 
             if (rental == null)
             {
@@ -112,7 +112,7 @@ namespace Delpin.API.Controllers.v1
 
             if (!deleted)
             {
-                _logger.LogInformation($"Unable to delete {nameof(Rental)} with id: {id}");
+                _logger.LogInformation($"Unable to find/delete {nameof(Rental)} with id: {id}");
                 return NotFound();
             }
 

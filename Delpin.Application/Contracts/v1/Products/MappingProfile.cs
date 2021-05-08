@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using Delpin.Application.Contracts.v1.ProductCategories;
+﻿using AutoMapper;
 using Delpin.Domain.Entities;
 
 namespace Delpin.Application.Contracts.v1.Products

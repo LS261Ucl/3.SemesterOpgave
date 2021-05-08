@@ -3,7 +3,6 @@ using Delpin.Application.Contracts.v1.ProductGroups;
 using Delpin.Application.Interfaces;
 using Delpin.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -60,7 +59,10 @@ namespace Delpin.API.Controllers.v1
             bool created = await _groupRepository.CreateAsync(group);
 
             if (!created)
+            {
+                _logger.LogInformation($"Unable to create {nameof(ProductGroup)}. Please check model and try again.");
                 return BadRequest();
+            }
 
             return CreatedAtAction(nameof(Get), new { id = group.Id }, _mapper.Map<ProductGroup>(group));
         }
@@ -71,14 +73,20 @@ namespace Delpin.API.Controllers.v1
             var groupToUpdate = await _groupRepository.GetAsync(x => x.Id == id);
 
             if (groupToUpdate == null)
+            {
+                _logger.LogInformation($"No {nameof(ProductGroup)} was found with id: {id}");
                 return NotFound();
+            }
 
             _mapper.Map(requestDto, groupToUpdate);
 
             bool update = await _groupRepository.UpdateAsync(groupToUpdate);
 
             if (!update)
+            {
+                _logger.LogInformation($"Error updating {nameof(ProductGroup)} id: {id}");
                 return BadRequest();
+            }
 
             return NoContent();
         }
@@ -89,7 +97,10 @@ namespace Delpin.API.Controllers.v1
             bool deleted = await _groupRepository.DeleteAsync(id);
 
             if (!deleted)
+            {
+                _logger.LogInformation($"Unable to find/delete {nameof(ProductCategory)} with id: {id}");
                 return NotFound();
+            }
 
             return NoContent();
         }
