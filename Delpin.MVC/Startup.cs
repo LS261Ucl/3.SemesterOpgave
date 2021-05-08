@@ -1,8 +1,10 @@
+using Delpin.MVC.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Net.Http;
 
 namespace Delpin.Mvc
 {
@@ -21,6 +23,8 @@ namespace Delpin.Mvc
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddRazorPages();
             services.AddControllersWithViews();
+            services.AddScoped<HttpClient>();
+            services.AddScoped<IHttpService, HttpService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

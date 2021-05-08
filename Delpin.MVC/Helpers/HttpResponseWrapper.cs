@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Delpin.MVC.Services
+namespace Delpin.Mvc.Helpers
 {
     public class HttpResponseWrapper<T>
     {
