@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Claims;
+using System.Text;
 using Delpin.Application.Interfaces;
 using Delpin.Domain.Entities;
 using Delpin.Infrastructure.Data;
@@ -6,6 +7,7 @@ using Delpin.Infrastructure.Data.Repositories;
 using Delpin.Infrastructure.Identity;
 using Delpin.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -46,6 +48,17 @@ namespace Delpin.Infrastructure
                         ValidateAudience = false
                     };
                 });
+
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("MustBeAdmin",
+                    policy => policy.AddRequirements(
+                        new ClaimsAuthorizationRequirement(ClaimTypes.Role, new[] { "Admin" })));
+                
+                opt.AddPolicy("MustBeSuperUser",
+                    policy => policy.AddRequirements(
+                        new ClaimsAuthorizationRequirement(ClaimTypes.Role, new[] { "SuperUser", "Admin" })));
+            });
 
             services.AddScoped<TokenService>();
 
