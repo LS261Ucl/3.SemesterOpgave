@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Delpin.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace Delpin.Application.Contracts.v1.ProductItems
 {
     public class CreateProductItemDto
     {
+        [Required]
         public bool IsAvailable { get; set; }
+        [Required]
         public DateTime LastService { get; set; }
+        [Required]
         public Guid ProductId { get; set; }
+        [Required]
         public string PostalCode { get; set; }
-        
-        
     }
 }

@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
-using Delpin.MVC.Models;
+﻿using Delpin.MVC.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace Delpin.MVC.Controllers
 {
@@ -21,6 +21,7 @@ namespace Delpin.MVC.Controllers
 
         public IActionResult Privacy()
         {
+            _logger.LogInformation("Showing privacy");
             return View();
         }
 

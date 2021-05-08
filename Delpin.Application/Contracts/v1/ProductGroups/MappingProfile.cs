@@ -9,7 +9,7 @@ namespace Delpin.Application.Contracts.v1.ProductGroups
         {
             CreateMap<ProductGroup, ProductGroupDto>();
             CreateMap<CreateProductGroupDto, ProductGroup>();
-            CreateMap<UpdateProdcutGroupDto, ProductGroup>();
+            CreateMap<UpdateProductGroupDto, ProductGroup>();
 
         }
     }

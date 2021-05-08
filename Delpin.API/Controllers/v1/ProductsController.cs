@@ -20,7 +20,8 @@ namespace Delpin.API.Controllers.v1
         private readonly IMapper _mapper;
         private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(IGenericRepository<Product> productRepository, IMapper mapper, ILogger<ProductsController> logger)
+        public ProductsController(IGenericRepository<Product> productRepository, IMapper mapper, 
+            ILogger<ProductsController> logger)
         {
             _productRepository = productRepository;
             _mapper = mapper;
@@ -31,7 +32,8 @@ namespace Delpin.API.Controllers.v1
         public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAll(string orderBy, string productGroup)
         {
             var products = await _productRepository
-                .GetAllAsync(!string.IsNullOrEmpty(productGroup) ? x => x.ProductGroup.Name == productGroup : null, orderBy: new ProductOrderBy().Sorting(orderBy));
+                .GetAllAsync(!string.IsNullOrEmpty(productGroup) ? x => x.ProductGroup.Name == productGroup : null, 
+                    orderBy: new ProductOrderBy().Sorting(orderBy));
 
             return Ok(_mapper.Map<IReadOnlyList<ProductDto>>(products));
         }
@@ -39,7 +41,8 @@ namespace Delpin.API.Controllers.v1
         [HttpGet("{id:guid}", Name = "GetProduct")]
         public async Task<ActionResult<ProductDto>> Get(Guid id)
         {
-            var products = await _productRepository.GetAsync(x => x.Id == id, includes: x => x.Include(p => p.ProductItems).ThenInclude(p => p.PostalCity));
+            var products = await _productRepository.GetAsync(x => x.Id == id, 
+                x => x.Include(p => p.ProductItems).ThenInclude(p => p.PostalCity));
 
             if (products == null)
             {
@@ -58,7 +61,10 @@ namespace Delpin.API.Controllers.v1
             bool created = await _productRepository.CreateAsync(product);
 
             if (!created)
+            {
+                _logger.LogInformation($"Unable to create {nameof(Product)}. Please check model and try again.");
                 return BadRequest();
+            }
 
             return CreatedAtAction(nameof(Get), new { id = product.Id }, _mapper.Map<ProductDto>(product));
         }
@@ -69,14 +75,20 @@ namespace Delpin.API.Controllers.v1
             var productToUpdate = await _productRepository.GetAsync(x => x.Id == id);
 
             if (productToUpdate == null)
+            {
+                _logger.LogInformation($"No {nameof(Product)} was found with id: {id}");
                 return NotFound();
+            }
 
             _mapper.Map(requestDto, productToUpdate);
 
             bool updated = await _productRepository.UpdateAsync(productToUpdate);
 
             if (!updated)
+            {
+                _logger.LogInformation($"Error updating {nameof(Product)} id: {id}");
                 return BadRequest();
+            }
 
             return NoContent();
         }
@@ -87,7 +99,10 @@ namespace Delpin.API.Controllers.v1
             bool deleted = await _productRepository.DeleteAsync(id);
 
             if (!deleted)
+            {
+                _logger.LogInformation($"Unable to find/delete {nameof(Product)} with id: {id}");
                 return NotFound();
+            }
 
             return NoContent();
         }
