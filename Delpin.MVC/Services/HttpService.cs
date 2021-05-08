@@ -1,4 +1,6 @@
 ﻿using Delpin.Mvc.Helpers;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -9,16 +11,16 @@ namespace Delpin.MVC.Services
     public class HttpService : IHttpService
     {
         private readonly HttpClient _httpClient;
-        private const string BaseUrl = "https://localhost:5001/api/v1/";
 
-        public HttpService(HttpClient httpClient)
+        public HttpService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _httpClient.BaseAddress = new Uri(configuration.GetValue<string>("BaseApiUrl"));
         }
 
         public async Task<HttpResponseWrapper<T>> Get<T>(string url)
         {
-            var response = await _httpClient.GetAsync(BaseUrl + url);
+            var response = await _httpClient.GetAsync(url);
 
             if (!response.IsSuccessStatusCode)
                 return new HttpResponseWrapper<T>(false, default, response);
@@ -32,7 +34,7 @@ namespace Delpin.MVC.Services
         {
             string dataJson = JsonSerializer.Serialize(data);
             var stringContent = new StringContent(dataJson, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(BaseUrl + url, stringContent);
+            var response = await _httpClient.PostAsync(url, stringContent);
 
             if (!response.IsSuccessStatusCode)
                 return new HttpResponseWrapper<TResponse>(false, default, response);
