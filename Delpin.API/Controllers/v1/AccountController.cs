@@ -90,5 +90,18 @@ namespace Delpin.API.Controllers.v1
                 Token = _tokenService.CreateToken(user)
             });
         }
+
+        [HttpGet]
+        public async Task<ActionResult<UserDto>> GetCurrentUser()
+        {
+            var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
+
+            return Ok(new UserDto
+            {
+                Email = user.Email,
+                FullName = user.FullName,
+                Token = _tokenService.CreateToken(user)
+            });
+        }
     }
 }
