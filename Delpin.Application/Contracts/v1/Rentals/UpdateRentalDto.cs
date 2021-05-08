@@ -1,6 +1,6 @@
-﻿using Delpin.Application.Contracts.v1.RentalLines;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Delpin.Application.Contracts.v1.RentalLines;
 
 namespace Delpin.Application.Contracts.v1.Rentals
 {

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Delpin.Application.Contracts.v1.Rentals;
 using Delpin.Application.Interfaces;
 using Delpin.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Delpin.Application.Contracts.v1.Rentals;
 
 namespace Delpin.API.Controllers.v1
 {
