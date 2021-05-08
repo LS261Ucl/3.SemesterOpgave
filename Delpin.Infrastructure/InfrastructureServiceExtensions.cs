@@ -2,6 +2,7 @@
 using System.Text;
 using Delpin.Application.Interfaces;
 using Delpin.Domain.Entities;
+using Delpin.Domain.Entities.Identity;
 using Delpin.Infrastructure.Data;
 using Delpin.Infrastructure.Data.Repositories;
 using Delpin.Infrastructure.Identity;

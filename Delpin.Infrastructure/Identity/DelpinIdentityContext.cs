@@ -1,4 +1,5 @@
 ﻿using Delpin.Domain.Entities;
+using Delpin.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

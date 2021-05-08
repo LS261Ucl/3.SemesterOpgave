@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Delpin.Application.Contracts.v1.Identity;
 using Delpin.Domain.Entities;
+using Delpin.Domain.Entities.Identity;
 using Delpin.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
