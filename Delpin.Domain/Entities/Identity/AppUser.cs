@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Delpin.Domain.Entities
+namespace Delpin.Domain.Entities.Identity
 {
     public class AppUser : IdentityUser
     {

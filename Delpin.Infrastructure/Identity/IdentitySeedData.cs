@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Delpin.Domain.Entities;
+using Delpin.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 
 namespace Delpin.Infrastructure.Identity

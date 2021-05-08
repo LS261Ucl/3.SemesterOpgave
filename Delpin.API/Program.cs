@@ -1,5 +1,6 @@
 using System;
 using Delpin.Domain.Entities;
+using Delpin.Domain.Entities.Identity;
 using Delpin.Infrastructure.Data;
 using Delpin.Infrastructure.Identity;
 using Microsoft.AspNetCore.Hosting;
