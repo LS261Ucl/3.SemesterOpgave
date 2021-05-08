@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Delpin.API.Controllers.v1
 {
@@ -22,7 +23,7 @@ namespace Delpin.API.Controllers.v1
             _context = context;
             _logger = logger;
         }
-
+        
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<PostalCity>>> GetAll()
         {
