@@ -1,4 +1,5 @@
-﻿namespace Delpin.MVC.Dto.v1.PostalCities
+﻿
+namespace Delpin.MVC.Dto.v1.PostalCities
 {
     public class PostalCityDto
     {

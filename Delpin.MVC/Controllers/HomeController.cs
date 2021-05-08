@@ -1,9 +1,13 @@
-﻿using Delpin.MVC.Models;
+﻿using Delpin.Mvc.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Delpin.MVC.Controllers
+namespace Delpin.Mvc.Controllers
 {
     public class HomeController : Controller
     {
@@ -21,7 +25,6 @@ namespace Delpin.MVC.Controllers
 
         public IActionResult Privacy()
         {
-            _logger.LogInformation("Showing privacy");
             return View();
         }
 

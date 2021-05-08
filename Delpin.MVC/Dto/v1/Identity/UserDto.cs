@@ -1,4 +1,5 @@
-﻿namespace Delpin.MVC.Dto.v1.Identity
+﻿
+namespace Delpin.MVC.Dto.v1.Identity
 {
     public class UserDto
     {

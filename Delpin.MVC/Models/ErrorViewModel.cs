@@ -1,4 +1,6 @@
-namespace Delpin.MVC.Models
+using System;
+
+namespace Delpin.Mvc.Models
 {
     public class ErrorViewModel
     {

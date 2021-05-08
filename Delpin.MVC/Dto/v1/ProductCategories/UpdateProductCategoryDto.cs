@@ -1,4 +1,5 @@
-﻿namespace Delpin.MVC.Dto.v1.ProductCategories
+﻿
+namespace Delpin.MVC.Dto.v1.ProductCategories
 {
     public class UpdateProductCategoryDto
     {
