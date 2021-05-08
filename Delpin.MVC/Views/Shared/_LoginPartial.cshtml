@@ -1,8 +1,26 @@
-﻿<ul class="nav navbar-nav navbar-right">
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-    </li>
-</ul>
+﻿@if (Context.Request.Cookies["Token"] != null && Context.Request.Cookies["Name"] != null)
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li class="nav-item">
+            <a class="nav-link text-dark">Hej @Context.Request.Cookies["Name"]</a>
+        </li>
+        @if (Context.Request.Cookies["Role"] == "Admin")
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Registrer</a>
+            </li>
+        }
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Log ud</a>
+        </li>
+    </ul>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Log ind</a>
+        </li>
+    </ul>
+}
+
