@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Delpin.Domain.Entities;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Delpin.Domain.Entities;
 
 namespace Delpin.Application.Contracts.v1.ProductItems
 {

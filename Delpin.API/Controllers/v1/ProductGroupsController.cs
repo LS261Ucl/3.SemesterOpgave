@@ -66,7 +66,7 @@ namespace Delpin.API.Controllers.v1
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult> Update (Guid id, UpdateProdcutGroupDto requestDto )
+        public async Task<ActionResult> Update (Guid id, UpdateProductGroupDto requestDto )
         {
             var groupToUpdate = await _groupRepository.GetAsync(x => x.Id == id);
 
