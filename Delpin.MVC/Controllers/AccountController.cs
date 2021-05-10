@@ -1,4 +1,5 @@
-﻿using Delpin.MVC.Dto.v1.Identity;
+﻿using Delpin.Mvc.Models;
+using Delpin.MVC.Dto.v1.Identity;
 using Delpin.MVC.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +35,7 @@ namespace Delpin.MVC.Controllers
             if (!ModelState.IsValid)
                 return View(loginDto);
 
-            var response = await _httpService.Post<LoginDto, UserDto>("account/login", loginDto);
+            var response = await _httpService.Create<LoginDto, UserDto>("account/login", loginDto, null);
 
             if (!response.Success)
                 return View(loginDto);
@@ -79,12 +80,17 @@ namespace Delpin.MVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(RegisterDto registerDto)
+        public async Task<IActionResult> Register(RegisterViewModel registerVm)
         {
             if (!ModelState.IsValid)
-                return View(registerDto);
+                return View(registerVm);
 
-            return Ok();
+            var response = await _httpService.Create<RegisterDto, UserDto>("account/register", registerVm.RegisterDto, Request.Cookies["Token"]);
+
+            if (!response.Success)
+                return View(registerVm);
+
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]

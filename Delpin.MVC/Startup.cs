@@ -44,7 +44,14 @@ namespace Delpin.Mvc
 
             app.UseRouting();
 
-            app.UseAuthentication();
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Cookies["Token"] == null && context.Request.Path != "/account/login")
+                    context.Response.Redirect("/account/login");
+
+                await next.Invoke();
+            });
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
