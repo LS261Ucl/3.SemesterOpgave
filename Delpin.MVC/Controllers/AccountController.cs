@@ -85,7 +85,7 @@ namespace Delpin.MVC.Controllers
             if (!ModelState.IsValid)
                 return View(registerVm);
 
-            var response = await _httpService.Post<RegisterDto, UserDto>("account/register", registerVm.RegisterDto);
+            var response = await _httpService.Post<RegisterDto, UserDto>("account/register", registerVm.RegisterDto, Request.Cookies["Token"]);
 
             if (!response.Success)
                 return View(registerVm);
