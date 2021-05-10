@@ -1,6 +1,7 @@
 ﻿using Delpin.Mvc.Helpers;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -33,7 +34,7 @@ namespace Delpin.MVC.Services
             return new HttpResponseWrapper<T>(true, responseDeserialized, response);
         }
 
-        public async Task<HttpResponseWrapper<TResponse>> Post<T, TResponse>(string url, T data, string token = null)
+        public async Task<HttpResponseWrapper<TResponse>> Create<T, TResponse>(string url, T data, string token = null)
         {
             SetRequestHeader(token);
 
@@ -46,6 +47,30 @@ namespace Delpin.MVC.Services
 
             var responseDeserialized = await Deserialize<TResponse>(response);
             return new HttpResponseWrapper<TResponse>(true, responseDeserialized, response);
+        }
+
+        public async Task<HttpResponseWrapper<object>> Update<T>(string url, T data, string token = null)
+        {
+            SetRequestHeader(token);
+            var dataJson = JsonSerializer.Serialize(data);
+            var stringContent = new StringContent(dataJson, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync(url, stringContent);
+
+            if (!response.IsSuccessStatusCode)
+                return new HttpResponseWrapper<object>(false, default, response);
+
+            return new HttpResponseWrapper<object>(true, response.IsSuccessStatusCode, response);
+        }
+
+        public async Task<HttpResponseWrapper<object>> Delete(string url, string token = null)
+        {
+            SetRequestHeader(token);
+            var response = await _httpClient.DeleteAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+                return new HttpResponseWrapper<object>(false, default, response);
+
+            return new HttpResponseWrapper<object>(true, response.IsSuccessStatusCode, response);
         }
 
         private async Task<T> Deserialize<T>(HttpResponseMessage httpResponse)

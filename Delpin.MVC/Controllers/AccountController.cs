@@ -35,7 +35,7 @@ namespace Delpin.MVC.Controllers
             if (!ModelState.IsValid)
                 return View(loginDto);
 
-            var response = await _httpService.Post<LoginDto, UserDto>("account/login", loginDto);
+            var response = await _httpService.Create<LoginDto, UserDto>("account/login", loginDto, null);
 
             if (!response.Success)
                 return View(loginDto);
@@ -85,7 +85,7 @@ namespace Delpin.MVC.Controllers
             if (!ModelState.IsValid)
                 return View(registerVm);
 
-            var response = await _httpService.Post<RegisterDto, UserDto>("account/register", registerVm.RegisterDto, Request.Cookies["Token"]);
+            var response = await _httpService.Create<RegisterDto, UserDto>("account/register", registerVm.RegisterDto, Request.Cookies["Token"]);
 
             if (!response.Success)
                 return View(registerVm);
