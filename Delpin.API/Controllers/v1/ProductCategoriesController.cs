@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Delpin.Application.Contracts.v1.ProductCategories;
 using Delpin.Application.Interfaces;
 using Delpin.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Delpin.API.Controllers.v1
 {
@@ -52,6 +53,7 @@ namespace Delpin.API.Controllers.v1
             return Ok(_mapper.Map<ProductCategoryDto>(category));
         }
 
+        [Authorize(Policy = "IsSuperUser")]
         [HttpPost]
         public async Task<ActionResult<ProductCategoryDto>> Create([FromBody] CreateProductCategoryDto requestDto)
         {
@@ -69,6 +71,7 @@ namespace Delpin.API.Controllers.v1
             return CreatedAtAction(nameof(Get), new { id = category.Id }, _mapper.Map<ProductCategoryDto>(category));
         }
 
+        [Authorize(Policy = "IsSuperUser")]
         [HttpPut("{id:guid}")]
         public async Task<ActionResult> Update(Guid id, UpdateProductCategoryDto requestDto)
         {
@@ -93,6 +96,7 @@ namespace Delpin.API.Controllers.v1
             return NoContent();
         }
 
+        [Authorize(Policy = "IsSuperUser")]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult> Delete(Guid id)
         {

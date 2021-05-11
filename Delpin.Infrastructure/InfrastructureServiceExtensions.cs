@@ -1,7 +1,4 @@
-﻿using System.Security.Claims;
-using System.Text;
-using Delpin.Application.Interfaces;
-using Delpin.Domain.Entities;
+﻿using Delpin.Application.Interfaces;
 using Delpin.Domain.Entities.Identity;
 using Delpin.Infrastructure.Data;
 using Delpin.Infrastructure.Data.Repositories;
@@ -14,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
 
 namespace Delpin.Infrastructure
 {
@@ -52,11 +51,11 @@ namespace Delpin.Infrastructure
 
             services.AddAuthorization(opt =>
             {
-                opt.AddPolicy("MustBeAdmin",
+                opt.AddPolicy("IsAdmin",
                     policy => policy.AddRequirements(
                         new ClaimsAuthorizationRequirement(ClaimTypes.Role, new[] { "Admin" })));
-                
-                opt.AddPolicy("MustBeSuperUser",
+
+                opt.AddPolicy("IsSuperUser",
                     policy => policy.AddRequirements(
                         new ClaimsAuthorizationRequirement(ClaimTypes.Role, new[] { "SuperUser", "Admin" })));
             });

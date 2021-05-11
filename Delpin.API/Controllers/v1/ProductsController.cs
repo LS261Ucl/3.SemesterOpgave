@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
+using Delpin.Application.Contracts.v1.Products;
 using Delpin.Application.Interfaces;
 using Delpin.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Delpin.Application.Contracts.v1.Products;
 
 namespace Delpin.API.Controllers.v1
 {
@@ -20,7 +21,7 @@ namespace Delpin.API.Controllers.v1
         private readonly IMapper _mapper;
         private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(IGenericRepository<Product> productRepository, IMapper mapper, 
+        public ProductsController(IGenericRepository<Product> productRepository, IMapper mapper,
             ILogger<ProductsController> logger)
         {
             _productRepository = productRepository;
@@ -32,7 +33,7 @@ namespace Delpin.API.Controllers.v1
         public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAll(string orderBy, string productGroup)
         {
             var products = await _productRepository
-                .GetAllAsync(!string.IsNullOrEmpty(productGroup) ? x => x.ProductGroup.Name == productGroup : null, 
+                .GetAllAsync(!string.IsNullOrEmpty(productGroup) ? x => x.ProductGroup.Name == productGroup : null,
                     orderBy: new ProductOrderBy().Sorting(orderBy));
 
             return Ok(_mapper.Map<IReadOnlyList<ProductDto>>(products));
@@ -41,7 +42,7 @@ namespace Delpin.API.Controllers.v1
         [HttpGet("{id:guid}", Name = "GetProduct")]
         public async Task<ActionResult<ProductDto>> Get(Guid id)
         {
-            var products = await _productRepository.GetAsync(x => x.Id == id, 
+            var products = await _productRepository.GetAsync(x => x.Id == id,
                 x => x.Include(p => p.ProductItems).ThenInclude(p => p.PostalCity));
 
             if (products == null)
@@ -93,6 +94,7 @@ namespace Delpin.API.Controllers.v1
             return NoContent();
         }
 
+        [Authorize(Policy = "IsSuperUser")]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult> Delete(Guid id)
         {
