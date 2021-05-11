@@ -30,10 +30,11 @@ namespace Delpin.API.Controllers.v1
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductGroupDto>>> GetAll(string orderBy)
+        public async Task<ActionResult<IReadOnlyList<ProductGroupDto>>> GetAll(string orderBy, string productCategory)
         {
             var groups = await _groupRepository
-               .GetAllAsync(orderBy: new ProductGroupOrderBy().Sorting(orderBy));
+               .GetAllAsync(!string.IsNullOrEmpty(productCategory) ? x => x.ProductCategory.Name == productCategory : null,
+                   orderBy: new ProductGroupOrderBy().Sorting(orderBy));
 
             return Ok(_mapper.Map<IReadOnlyList<ProductGroupDto>>(groups));
         }
