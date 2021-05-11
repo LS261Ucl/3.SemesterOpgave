@@ -2,6 +2,7 @@
 using Delpin.Application.Contracts.v1.ProductItems;
 using Delpin.Application.Interfaces;
 using Delpin.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -95,6 +96,7 @@ namespace Delpin.API.Controllers.v1
             return NoContent();
         }
 
+        [Authorize(Policy = "IsSuperUser")]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult> Delete(Guid id)
         {

@@ -1,13 +1,18 @@
 ﻿using Delpin.Mvc.Models;
 using Delpin.MVC.Dto.v1.Identity;
 using Delpin.MVC.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Delpin.MVC.Controllers
@@ -23,12 +28,14 @@ namespace Delpin.MVC.Controllers
             _httpClient = httpClient;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
@@ -40,32 +47,26 @@ namespace Delpin.MVC.Controllers
             if (!response.Success)
                 return View(loginDto);
 
-            Response.Cookies.Delete("Token");
-            Response.Cookies.Delete("Name");
-            Response.Cookies.Delete("Role");
-
-            Response.Cookies.Append("Token", response.Response.Token, new CookieOptions
-            {
-                Expires = DateTime.UtcNow.AddDays(5),
-                Secure = true,
-                HttpOnly = true
-            });
-
-            Response.Cookies.Append("Name", response.Response.FullName, new CookieOptions
-            {
-                Expires = DateTime.UtcNow.AddDays(5),
-                Secure = true,
-                HttpOnly = true
-            });
-
             var jwt = new JwtSecurityToken(response.Response.Token);
 
-            Response.Cookies.Append("Role", jwt.Claims.FirstOrDefault(x => x.Type == "role")!.Value, new CookieOptions
+            var claims = new List<Claim>()
             {
-                Expires = DateTime.UtcNow.AddDays(5),
-                Secure = true,
-                HttpOnly = true
-            });
+                new Claim(ClaimTypes.GivenName, response.Response.FullName),
+                new Claim(ClaimTypes.Role, jwt.Claims.FirstOrDefault(x => x.Type == "role")!.Value),
+                new Claim("Token", response.Response.Token)
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties
+            {
+                AllowRefresh = true,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(5),
+                IsPersistent = true
+            };
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity), authProperties);
 
             _httpClient.DefaultRequestHeaders.Clear();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", response.Response.Token);
@@ -85,7 +86,7 @@ namespace Delpin.MVC.Controllers
             if (!ModelState.IsValid)
                 return View(registerVm);
 
-            var response = await _httpService.Create<RegisterDto, UserDto>("account/register", registerVm.RegisterDto, Request.Cookies["Token"]);
+            var response = await _httpService.Create<RegisterDto, UserDto>("account/register", registerVm.RegisterDto, User.Claims.First(x => x.Type == "Token").Value);
 
             if (!response.Success)
                 return View(registerVm);
@@ -94,24 +95,11 @@ namespace Delpin.MVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            Response.Cookies.Append("Token", "", new CookieOptions
-            {
-                Expires = DateTime.UtcNow.AddSeconds(-1),
-            });
-
-            Response.Cookies.Append("Name", "", new CookieOptions
-            {
-                Expires = DateTime.UtcNow.AddSeconds(-1),
-            });
-
-            Response.Cookies.Append("Role", "", new CookieOptions
-            {
-                Expires = DateTime.UtcNow.AddSeconds(-1),
-            });
-
             _httpClient.DefaultRequestHeaders.Clear();
+
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             return RedirectToAction("Index", "Home");
         }

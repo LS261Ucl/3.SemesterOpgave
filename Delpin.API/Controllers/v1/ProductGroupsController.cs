@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
+using Delpin.Application.Contracts.v1.ProductGroups;
 using Delpin.Application.Interfaces;
 using Delpin.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Delpin.Application.Contracts.v1.ProductGroups;
 
 namespace Delpin.API.Controllers.v1
 {
@@ -29,10 +30,11 @@ namespace Delpin.API.Controllers.v1
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductGroupDto>>> GetAll(string orderBy)
+        public async Task<ActionResult<IReadOnlyList<ProductGroupDto>>> GetAll(string orderBy, string productCategory)
         {
             var groups = await _groupRepository
-               .GetAllAsync(orderBy: new ProductGroupOrderBy().Sorting(orderBy));
+               .GetAllAsync(!string.IsNullOrEmpty(productCategory) ? x => x.ProductCategory.Name == productCategory : null,
+                   orderBy: new ProductGroupOrderBy().Sorting(orderBy));
 
             return Ok(_mapper.Map<IReadOnlyList<ProductGroupDto>>(groups));
         }
@@ -51,6 +53,7 @@ namespace Delpin.API.Controllers.v1
             return Ok(_mapper.Map<ProductGroupDto>(group));
         }
 
+        [Authorize(Policy = "IsSuperUser")]
         [HttpPost]
         public async Task<ActionResult<ProductGroupDto>> Create([FromBody] CreateProductGroupDto requestDto)
         {
@@ -67,8 +70,9 @@ namespace Delpin.API.Controllers.v1
             return CreatedAtAction(nameof(Get), new { id = group.Id }, _mapper.Map<ProductGroup>(group));
         }
 
+        [Authorize(Policy = "IsSuperUser")]
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult> Update (Guid id, UpdateProductGroupDto requestDto )
+        public async Task<ActionResult> Update(Guid id, UpdateProductGroupDto requestDto)
         {
             var groupToUpdate = await _groupRepository.GetAsync(x => x.Id == id);
 
@@ -90,7 +94,8 @@ namespace Delpin.API.Controllers.v1
 
             return NoContent();
         }
-        
+
+        [Authorize(Policy = "IsSuperUser")]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult> Delete(Guid id)
         {

@@ -1,0 +1,46 @@
+﻿@using Delpin.Mvc.Extensions
+@model IEnumerable<ProductCategoryViewModel>
+
+@{
+    ViewData["Title"] = "Udlejningskatalog";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<section>
+    @if (User.GetRole() == "Admin" || User.GetRole() == "SuperUser")
+    {
+        <a asp-action="Create">Create New</a>
+    }
+    <div class="container">
+        <div class="row row-cols-4">
+            @foreach (var category in Model)
+            {
+                <div>
+                    <a href="/ProductGroups?productCategory=@category.Name">
+                        <div class="card col" style="width: 18rem; margin: 10px; padding: 0; max-width: 250px">
+                            @if (string.IsNullOrEmpty(category.Image))
+                            {
+                                <img src="images/missing.png" class="card-img" style="max-width: 250px" alt="...">
+                            }
+                            else
+                            {
+                                <img src="@(category.Image)" class="card-img" style="max-width: 250px" alt="...">
+                            }
+                            <div class="card-body align-items-center" style="padding: 0; padding-top: 5px">
+                                <p class="card-title" style="text-align: center">@category.Name</p>
+                            </div>
+                        </div>
+                    </a>
+                    @if (User.GetRole() == "Admin" || User.GetRole() == "SuperUser")
+                    {
+                        <form asp-controller="ProductCategories" method="post">
+                            <input asp-action="Delete" asp-route-id="@category.Id" type="submit" style="margin-left: 10px" class="btn btn-danger" value="Delete" />
+                        </form>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</section>

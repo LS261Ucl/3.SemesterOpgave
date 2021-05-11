@@ -1,7 +1,4 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
-using Delpin.Application.Contracts.v1.Identity;
-using Delpin.Domain.Entities;
+﻿using Delpin.Application.Contracts.v1.Identity;
 using Delpin.Domain.Entities.Identity;
 using Delpin.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -9,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Delpin.API.Controllers.v1
 {
@@ -59,7 +58,7 @@ namespace Delpin.API.Controllers.v1
             });
         }
 
-        [Authorize(Policy = "MustBeAdmin")]
+        [Authorize(Policy = "IsAdmin")]
         [HttpPost("Register")]
         public async Task<ActionResult<UserDto>> Register([FromBody] RegisterDto registerDto)
         {

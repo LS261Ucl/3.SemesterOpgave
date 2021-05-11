@@ -1,10 +1,12 @@
-﻿@if (Context.Request.Cookies["Token"] != null && Context.Request.Cookies["Name"] != null)
+﻿@using System.Security.Claims
+@*@if (Context.Request.Cookies["Token"] != null && Context.Request.Cookies["Name"] != null)*@
+@if (Context.User.HasClaim(x => x.Type == "Token"))
 {
     <ul class="nav navbar-nav navbar-right">
         <li class="nav-item">
-            <a class="nav-link text-dark">Hej @Context.Request.Cookies["Name"]</a>
+            <a class="nav-link text-dark">Hej @Context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName)!.Value</a>
         </li>
-        @if (Context.Request.Cookies["Role"] == "Admin")
+        @if (Context.User.HasClaim(ClaimTypes.Role, "Admin"))
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Registrer</a>

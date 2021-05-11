@@ -1,5 +1,6 @@
 ﻿using Delpin.Domain.Entities;
 using Delpin.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -45,6 +46,7 @@ namespace Delpin.API.Controllers.v1
             return Ok(postalCity);
         }
 
+        [Authorize(Policy = "IsSuperUser")]
         [HttpPost]
         public async Task<ActionResult<PostalCity>> Create([FromBody] PostalCity request)
         {
@@ -60,6 +62,7 @@ namespace Delpin.API.Controllers.v1
             return CreatedAtAction(nameof(Get), new { postalCode = request.PostalCode }, request);
         }
 
+        [Authorize(Policy = "IsSuperUser")]
         [HttpDelete("{postalCode}")]
         public async Task<ActionResult> Delete(string postalCode)
         {

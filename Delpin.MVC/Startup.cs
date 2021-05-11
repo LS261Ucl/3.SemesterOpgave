@@ -1,29 +1,52 @@
+using Delpin.Mvc.Authorization;
 using Delpin.MVC.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Net.Http;
 
 namespace Delpin.Mvc
 {
     public class Startup
     {
+        private IConfiguration _configuration;
+
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(opt =>
+            {
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                opt.Filters.Add(new AuthorizeFilter(policy));
+            });
             services.AddScoped<HttpClient>();
             services.AddScoped<IHttpService, HttpService>();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(opt =>
+            {
+                opt.LoginPath = "/Account/Login";
+                opt.ExpireTimeSpan = TimeSpan.FromDays(5);
+                opt.LogoutPath = "/Account/Logout";
+            });
+
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("IsAdmin", policy => policy.Requirements.Add(new IsInRoleRequirement("Admin")));
+                opt.AddPolicy("IsSuperUser", policy => policy.Requirements.Add(new IsInRoleRequirement("SuperUser")));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, IsInRoleHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,12 +69,13 @@ namespace Delpin.Mvc
 
             app.Use(async (context, next) =>
             {
-                if (context.Request.Cookies["Token"] == null && context.Request.Path != "/account/login")
+                if (context.User.HasClaim(x => x.Type == "Token") && context.Request.Path != "/account/login")
                     context.Response.Redirect("/account/login");
 
                 await next.Invoke();
             });
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
