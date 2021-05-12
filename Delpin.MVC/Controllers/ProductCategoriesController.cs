@@ -1,5 +1,5 @@
 ﻿using Delpin.Mvc.Extensions;
-using Delpin.Mvc.Models;
+using Delpin.Mvc.Models.ProductCategories;
 using Delpin.Mvc.Services;
 using Delpin.MVC.Dto.v1.ProductCategories;
 using Delpin.MVC.Services;
@@ -86,8 +86,13 @@ namespace Delpin.Mvc.Controllers
 
             UpdateProductCategoryViewModel updateCategoryViewModel = new UpdateProductCategoryViewModel
             {
-                Name = response.Response.Name
+                Name = response.Response.Name,
             };
+
+            if (response.Response.Image.Length > 1)
+            {
+                updateCategoryViewModel.ImageTemp = response.Response.Image;
+            }
 
             return View(updateCategoryViewModel);
         }
@@ -101,16 +106,22 @@ namespace Delpin.Mvc.Controllers
                 Name = updateCategoryViewModel.Name
             };
 
-            if (updateCategoryViewModel.Image != null)
+            if (updateCategoryViewModel.Image != null && updateCategoryViewModel.Image.Length > 1)
             {
                 productCategoryDto.Image = await _imageConverter.ConvertImageToByteArray(updateCategoryViewModel.Image);
+                updateCategoryViewModel.ImageTemp = Array.Empty<byte>();
+            }
+
+            if (updateCategoryViewModel.ImageTemp != null && updateCategoryViewModel.ImageTemp.Length > 1)
+            {
+                productCategoryDto.Image = updateCategoryViewModel.ImageTemp;
             }
 
             var response = await _httpService.Update($"ProductCategories/{id}", productCategoryDto, User.GetToken());
 
             if (!response.Success)
             {
-
+                return RedirectToAction("Error", "Home");
             }
 
             return RedirectToAction(nameof(Index));
@@ -124,7 +135,7 @@ namespace Delpin.Mvc.Controllers
 
             if (!response.Success)
             {
-
+                return RedirectToAction("Error", "Home");
             }
 
             return RedirectToAction(nameof(Index));

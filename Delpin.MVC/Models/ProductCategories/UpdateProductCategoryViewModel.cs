@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
-namespace Delpin.Mvc.Models
+namespace Delpin.Mvc.Models.ProductCategories
 {
     public class UpdateProductCategoryViewModel
     {
@@ -10,5 +10,7 @@ namespace Delpin.Mvc.Models
         [Display(Name = "Upload billede")]
         [FileExtensions(Extensions = "jpg,png,jpeg")]
         public IFormFile Image { get; set; }
+
+        public byte[] ImageTemp { get; set; }
     }
 }

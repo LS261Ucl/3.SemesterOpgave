@@ -1,4 +1,4 @@
-﻿@model Delpin.Mvc.Models.CreateProductCategoryViewModel
+﻿@model Delpin.Mvc.Models.ProductCategories.CreateProductCategoryViewModel
 
 @{
     ViewData["Title"] = "Opret Produkt Kategori";
@@ -19,7 +19,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
-                <input type="file" name="Image" required />
+                <input asp-for="Image" type="file" name="Image" required />
+                <br />
+                <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Opret" class="btn btn-primary" />
