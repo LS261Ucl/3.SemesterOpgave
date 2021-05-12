@@ -1,7 +1,6 @@
 ﻿using Delpin.Mvc.Helpers;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -38,7 +37,7 @@ namespace Delpin.MVC.Services
         {
             SetRequestHeader(token);
 
-            string dataJson = JsonSerializer.Serialize(data);
+            string dataJson = JsonSerializer.Serialize(data, IgnoreNullSerializerOption());
             var stringContent = new StringContent(dataJson, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(url, stringContent);
 
@@ -52,7 +51,7 @@ namespace Delpin.MVC.Services
         public async Task<HttpResponseWrapper<object>> Update<T>(string url, T data, string token = null)
         {
             SetRequestHeader(token);
-            var dataJson = JsonSerializer.Serialize(data);
+            var dataJson = JsonSerializer.Serialize(data, IgnoreNullSerializerOption());
             var stringContent = new StringContent(dataJson, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(url, stringContent);
 
@@ -79,6 +78,16 @@ namespace Delpin.MVC.Services
 
             string response = await httpResponse.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<T>(response, serializerOptions);
+        }
+
+        private JsonSerializerOptions IgnoreNullSerializerOption()
+        {
+            var serializerOptions = new JsonSerializerOptions
+            {
+                IgnoreNullValues = true
+            };
+
+            return serializerOptions;
         }
 
         private void SetRequestHeader(string token)

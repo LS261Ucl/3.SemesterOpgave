@@ -13,5 +13,15 @@ namespace Delpin.Mvc.Extensions
         {
             return user.FindFirstValue(ClaimTypes.Role);
         }
+
+        public static bool IsAdmin(this ClaimsPrincipal user)
+        {
+            return user.FindFirstValue(ClaimTypes.Role) == "Admin";
+        }
+
+        public static bool IsSuperUser(this ClaimsPrincipal user)
+        {
+            return user.FindFirstValue(ClaimTypes.Role) == "SuperUser";
+        }
     }
 }
