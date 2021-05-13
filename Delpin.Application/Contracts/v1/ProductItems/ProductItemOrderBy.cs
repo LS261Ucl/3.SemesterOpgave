@@ -10,12 +10,10 @@ namespace Delpin.Application.Contracts.v1.ProductItems
         {
             switch (orderBy)
             {
-                case "postal":
-                    return x => x.OrderBy(p => p.PostalCode);
                 case "postalDesc":
                     return x => x.OrderByDescending(p => p.PostalCode);
                 default:
-                    return null;
+                    return x => x.OrderBy(p => p.PostalCode);
             }
         }
     }

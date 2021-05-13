@@ -1,17 +1,18 @@
 ﻿@using Delpin.Mvc.Extensions
-@model IEnumerable<Delpin.Mvc.Models.ProductGroups.ProductGroupViewModel>
+@model List<Delpin.Mvc.Models.ProductGroups.ProductGroupViewModel>
 
 @{
-    ViewData["Title"] = "Placeholder";
+    Guid categoryId = Model[0].ProductCategory.Id;
+    string categoryName = Model[0].ProductCategory.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1>@categoryName</h1>
 
 <section>
     @if (User.IsAdmin() || User.IsSuperUser())
     {
-        <a asp-action="Create" style="width: 80px" class="btn btn-primary">Opret</a>
+        <a asp-action="Create" asp-route-categoryId="@categoryId" asp-route-categoryName="@categoryName" style="width: 80px" class="btn btn-primary">Opret</a>
     }
     <div class="container">
         <div class="row row-cols-4">
@@ -36,7 +37,7 @@
                     @if (User.IsAdmin() || User.IsSuperUser())
                     {
                         <div class="text-center" style="margin-right: 10px">
-                            <a asp-action="Edit" asp-route-id="@group.Id" type="submit" style="display: inline" class="btn btn-secondary btn-delpin">Rediger</a>
+                            <a asp-action="Update" asp-route-id="@group.Id" type="submit" style="display: inline" class="btn btn-secondary btn-delpin">Rediger</a>
                             <form asp-controller="ProductCategories" style="display: inline;" method="post">
                                 <input asp-action="Delete" asp-route-id="@group.Id" type="submit" class="btn btn-danger btn-delpin" value="Slet" />
                             </form>

@@ -80,7 +80,7 @@ namespace Delpin.Mvc.Controllers
             }
         }
 
-        public async Task<IActionResult> Edit(Guid id)
+        public async Task<IActionResult> Update(Guid id)
         {
             var response = await _httpService.Get<ProductCategoryDto>($"ProductCategories/{id}", User.GetToken());
 
@@ -99,7 +99,7 @@ namespace Delpin.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, UpdateProductCategoryViewModel updateCategoryViewModel)
+        public async Task<IActionResult> Update(Guid id, UpdateProductCategoryViewModel updateCategoryViewModel)
         {
             UpdateProductCategoryDto productCategoryDto = new UpdateProductCategoryDto
             {

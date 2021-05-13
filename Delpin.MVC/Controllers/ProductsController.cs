@@ -52,13 +52,13 @@ namespace Delpin.Mvc.Controllers
             }
         }
 
-        // GET: ProductsController/Edit/5
+        // GET: ProductsController/Update/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: ProductsController/Edit/5
+        // POST: ProductsController/Update/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)

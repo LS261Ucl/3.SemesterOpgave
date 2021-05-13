@@ -18,7 +18,7 @@
             @foreach (var category in Model)
             {
                 <div>
-                    <a href="/ProductGroups?productCategory=@category.Name">
+                    <a asp-controller="ProductGroups" asp-action="Index" asp-route-categoryName="@category.Name">
                         <div class="card col margin-10px-no-left" style="width: 18rem; padding: 0; max-width: 250px">
                             @if (string.IsNullOrEmpty(category.Image))
                             {
@@ -36,7 +36,7 @@
                     @if (User.IsAdmin() || User.IsSuperUser())
                     {
                         <div class="text-center" style="margin-right: 10px">
-                            <a asp-action="Edit" asp-route-id="@category.Id" type="submit" style="display: inline" class="btn btn-secondary btn-delpin">Rediger</a>
+                            <a asp-action="Update" asp-route-id="@category.Id" type="submit" style="display: inline" class="btn btn-secondary btn-delpin">Rediger</a>
                             <form asp-controller="ProductCategories" style="display: inline;" method="post">
                                 <input asp-action="Delete" asp-route-id="@category.Id" type="submit" class="btn btn-danger btn-delpin" value="Slet" />
                             </form>
