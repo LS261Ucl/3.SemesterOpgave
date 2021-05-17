@@ -57,9 +57,29 @@ namespace Delpin.Mvc.Controllers
         }
 
         // GET: ProductsController/Details/5
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Details(Guid id)
         {
-            return View();
+            var response = await _httpService.Get<ProductDto>($"products/{id}", User.GetToken());
+
+            string image = string.Empty;
+
+            if (response.Response.Image?.Length > 0)
+            {
+                image = _imageConverter.ConvertByteArrayToBase64String(response.Response.Image);
+            }
+
+            ProductViewModel productViewModel = new ProductViewModel
+            {
+                Id = response.Response.Id,
+                Name = response.Response.Name,
+                Description = response.Response.Description,
+                Price = response.Response.Price,
+                Image = image,
+                ProductGroup = response.Response.ProductGroup,
+                ProductItems = response.Response.ProductItems
+            };
+
+            return View(productViewModel);
         }
 
         // GET: ProductsController/Create

@@ -37,7 +37,7 @@
                 @foreach (var product in Model)
                 {
                     <div>
-                        <a href="/Products?productCategory=@product.Name">
+                        <a asp-action="Details" asp-route-id="@product.Id">
                             <div class="card col margin-10px-no-left" style="width: 18rem; padding: 0; max-width: 250px">
                                 @if (string.IsNullOrEmpty(product.Image))
                                 {
