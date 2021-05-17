@@ -37,7 +37,7 @@
                 @foreach (var group in Model)
                 {
                     <div>
-                        <a href="/Products?productCategory=@group.Name">
+                        <a asp-controller="Products" asp-action="Index" asp-route-groupName="@group.Name">
                             <div class="card col margin-10px-no-left" style="width: 18rem; padding: 0; max-width: 250px">
                                 @if (string.IsNullOrEmpty(group.Image))
                                 {
