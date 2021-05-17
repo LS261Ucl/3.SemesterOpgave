@@ -1,54 +1,62 @@
-﻿@model IEnumerable<Delpin.MVC.Dto.v1.Products.ProductDto>
+﻿@* @using Delpin.Mvc.Extensions
+    @model List<Delpin.Mvc.Models.ProductGroups.ProductGroupViewModel>
 
-@{
-    ViewData["Title"] = "View";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+    @{
+        Guid categoryId = Model[0].ProductCategory.Id;
+        string categoryName = Model[0].ProductCategory.Name;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 
-<h1>View</h1>
+    <script>
+        function alert() {
+            if (confirm('Vil du slette denne produktgruppe?')) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    </script>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Image)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Image)
-            </td>
-            <td>
-                @Html.ActionLink("Update", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <h1>@categoryName</h1>
+
+    <section>
+        @if (User.IsAdmin() || User.IsSuperUser())
+        {
+            <a asp-action="Create" asp-route-categoryId="@categoryId" asp-route-categoryName="@categoryName" style="width: 80px" class="btn btn-primary">Opret</a>
+        }
+        <div class="container">
+            <div class="row row-cols-4">
+                @foreach (var group in Model)
+                {
+                    <div>
+                        <a href="/Products?productCategory=@group.Name">
+                            <div class="card col margin-10px-no-left" style="width: 18rem; padding: 0; max-width: 250px">
+                                @if (string.IsNullOrEmpty(group.Image))
+                                {
+                                    <img src="images/missing.png" class="card-img image-card-size" alt="...">
+                                }
+                                else
+                                {
+                                    <img src="@(group.Image)" class="card-img image-card-size" alt="...">
+                                }
+                                <div class="card-body align-items-center" style="padding: 0; padding-top: 5px">
+                                    <p class="card-title" style="text-align: center">@group.Name</p>
+                                </div>
+                            </div>
+                        </a>
+                        @if (User.IsAdmin() || User.IsSuperUser())
+                        {
+                            <div class="text-center" style="margin-right: 10px">
+                                <a asp-action="Update" asp-route-id="@group.Id" type="submit" style="display: inline" class="btn btn-secondary btn-delpin">Rediger</a>
+                                <form asp-controller="ProductCategories" style="display: inline;" method="post" onsubmit="return alert()">
+                                    <input asp-action="Delete" asp-route-id="@group.Id" type="submit" class="btn btn-danger btn-delpin" value="Slet" />
+                                </form>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </section> *@
+
+hello i work

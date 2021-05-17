@@ -21,7 +21,18 @@
             <div class="form-group">
                 <label asp-for="ProductCategoryId" class="control-label"></label>
                 <select asp-for="ProductCategoryId" class="form-control">
-                    <option value="@ViewData["ProductCategoryId"]">@ViewData["ProductCategoryName"]</option>
+                    @if (!string.IsNullOrEmpty((string)ViewData["ProductCategoryId"]) && !string.IsNullOrEmpty((string)ViewData["ProductCategoryName"]))
+                    {
+
+                        <option value="@ViewData["ProductCategoryId"]">@ViewData["ProductCategoryName"]</option>
+                    }
+                    else
+                    {
+                        @foreach (var category in (List<ProductCategoryDto>)ViewData["Categories"])
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    }
                 </select>
                 <span asp-validation-for="ProductCategoryId" class="text-danger"></span>
             </div>

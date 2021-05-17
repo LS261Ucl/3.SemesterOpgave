@@ -6,6 +6,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<script>
+    function alert() {
+        if (confirm('Vil du slette denne kategori?')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
+
 <h1>@ViewData["Title"]</h1>
 
 <section>
@@ -37,7 +47,7 @@
                     {
                         <div class="text-center" style="margin-right: 10px">
                             <a asp-action="Update" asp-route-id="@category.Id" type="submit" style="display: inline" class="btn btn-secondary btn-delpin">Rediger</a>
-                            <form asp-controller="ProductCategories" style="display: inline;" method="post">
+                            <form asp-controller="ProductCategories" style="display: inline;" method="post" onsubmit="return alert()">
                                 <input asp-action="Delete" asp-route-id="@category.Id" type="submit" class="btn btn-danger btn-delpin" value="Slet" />
                             </form>
                         </div>

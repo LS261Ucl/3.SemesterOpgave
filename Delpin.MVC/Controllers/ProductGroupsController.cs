@@ -1,4 +1,5 @@
 ﻿using Delpin.Mvc.Extensions;
+using Delpin.Mvc.Helpers;
 using Delpin.Mvc.Models.ProductGroups;
 using Delpin.Mvc.Services;
 using Delpin.MVC.Dto.v1.ProductCategories;
@@ -43,18 +44,27 @@ namespace Delpin.Mvc.Controllers
                     Id = productGroup.Id,
                     Name = productGroup.Name,
                     Image = image,
-                    Products = productGroup.Products,
                     ProductCategory = productGroup.ProductCategory
                 });
             }
 
+
+
             return View(productGroupViewModels);
         }
 
-        public IActionResult Create(string categoryName, string categoryId)
+        public async Task<IActionResult> Create(string categoryName, string categoryId)
         {
-            ViewData["ProductCategoryName"] = categoryName;
-            ViewData["ProductCategoryId"] = categoryId;
+            if (!string.IsNullOrEmpty(categoryName) && !string.IsNullOrEmpty(categoryId))
+            {
+                ViewData["ProductCategoryName"] = categoryName;
+                ViewData["ProductCategoryId"] = categoryId;
+            }
+            else
+            {
+                var categoryResponse = await _httpService.Get<List<ProductCategoryDto>>($"ProductCategories", User.GetToken());
+                ViewData["Categories"] = categoryResponse.Response;
+            }
 
             return View();
         }
@@ -79,7 +89,11 @@ namespace Delpin.Mvc.Controllers
                     return View(productGroupViewModel);
                 }
 
-                return RedirectToAction("Index", "ProductGroups");
+                var categoryResponse =
+                    await _httpService.Get<ProductCategoryDto>(
+                        $"ProductCategories/{productGroupViewModel.ProductCategoryId}", User.GetToken());
+
+                return RedirectToAction("Index", "ProductGroups", new RouteValueMaker().GetRoute("categoryName", categoryResponse.Response.Name));
             }
             catch
             {
@@ -136,7 +150,11 @@ namespace Delpin.Mvc.Controllers
                 return RedirectToAction("Error", "Home");
             }
 
-            return RedirectToAction(nameof(Index));
+            var categoryResponse =
+                await _httpService.Get<ProductCategoryDto>(
+                    $"ProductCategories/{updateGroupViewModel.ProductCategoryId}", User.GetToken());
+
+            return RedirectToAction("Index", "ProductGroups", new RouteValueMaker().GetRoute("categoryName", categoryResponse.Response.Name));
         }
 
         [HttpPost]
@@ -150,7 +168,7 @@ namespace Delpin.Mvc.Controllers
                 return RedirectToAction("Error", "Home");
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "ProductGroups");
         }
     }
 }
