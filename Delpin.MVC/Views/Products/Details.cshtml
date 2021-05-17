@@ -1,0 +1,80 @@
+﻿@using Delpin.Mvc.Extensions
+@model Delpin.Mvc.Models.Products.ProductViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    function alert() {
+        if (confirm('Vil du slette denne produktlinje?')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
+
+<h1 class="delpin-color">@Model.Name</h1>
+
+<hr />
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <img src="@Model.Image" alt="@Model.Name" style="width: 500px; height: 500px" />
+        </div>
+        <div style="border-left:1px solid rgba(0,0,0,.1);height:500px"></div>
+        <div class="col pt-5">
+            <label><strong>Beskrivelse</strong></label>
+            <p>@Model.Description</p>
+            <label><strong>Leje pr. dag</strong></label>
+            <br />
+            <p class="delpin-color" style="font-size: 28px; margin-bottom: 0; display: inline-block"> <strong>@($"{Model.Price:#.##}") kr.</strong></p>
+            <p class="delpin-color" style="margin-bottom: 0; display: inline">(eksl. moms)</p>
+            <p class="delpin-color"><strong>@($"{Model.Price * 1.25M:#.##}") kr.</strong> (inkl. moms)</p>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col">
+            @foreach (var productItem in Model.ProductItems.OrderByDescending(x => x.IsAvailable))
+            {
+                @if (productItem.IsAvailable)
+                {
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Lokation: @productItem.PostalCity.PostalCode - @productItem.PostalCity.City</h5>
+                            <p class="card-text">Sidst serviceret: @productItem.LastService.ToString("d")</p>
+                            <a href="#" class="btn btn-primary">Tilføj til booking</a>
+                            @if (User.IsAdmin() || User.IsSuperUser())
+                            {
+                                <button href="#" class="btn btn-secondary btn-delpin">Opdater</button>
+                                <button href="#" class="btn btn-danger btn-delpin" onclick="return alert()">Slet</button>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="card mb-3 grayout">
+                        <div class="card-body">
+                            <h5 class="card-title">Lokation: @productItem.PostalCity.PostalCode - @productItem.PostalCity.City</h5>
+                            <p class="card-text">Sidst serviceret: @productItem.LastService.ToString("d")</p>
+                            <button href="#" disabled class="btn btn-secondary">Tilføj til booking</button>
+                            @if (User.IsAdmin() || User.IsSuperUser())
+                            {
+                                <button href="#" class="btn btn-secondary btn-delpin">Opdater</button>
+                                <button class="btn btn-danger btn-delpin" onclick="return alert()">Slet</button>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Opdater", "Update", new { id = Model.Id }) |
+    <a asp-action="Index" asp-route-groupName="@Model.ProductGroup.Name">Tilbage til oversigt</a>
+</div>

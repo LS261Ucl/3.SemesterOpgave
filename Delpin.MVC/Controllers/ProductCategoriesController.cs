@@ -1,5 +1,6 @@
 ﻿using Delpin.Mvc.Extensions;
-using Delpin.Mvc.Models;
+using Delpin.Mvc.Models.ProductCategories;
+using Delpin.Mvc.Services;
 using Delpin.MVC.Dto.v1.ProductCategories;
 using Delpin.MVC.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,12 @@ namespace Delpin.Mvc.Controllers
     public class ProductCategoriesController : Controller
     {
         private readonly IHttpService _httpService;
+        private readonly ImageConverter _imageConverter;
 
-        public ProductCategoriesController(IHttpService httpService)
+        public ProductCategoriesController(IHttpService httpService, ImageConverter imageConverter)
         {
             _httpService = httpService;
+            _imageConverter = imageConverter;
         }
 
         [HttpGet]
@@ -29,9 +32,9 @@ namespace Delpin.Mvc.Controllers
             {
                 string image = string.Empty;
 
-                if (category.Image == null && category.Image?.Length <= 0)
+                if (category.Image.Length >= 1)
                 {
-                    image = Convert.ToBase64String(category.Image);
+                    image = _imageConverter.ConvertByteArrayToBase64String(category.Image);
                 }
 
                 productCategoryViewModels.Add(new ProductCategoryViewModel
@@ -52,13 +55,12 @@ namespace Delpin.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateProductCategoryViewModel productCategoryViewModel)
+        public async Task<IActionResult> Create([Bind("Name,Image")] CreateProductCategoryViewModel productCategoryViewModel)
         {
             CreateProductCategoryDto productCategoryDto = new CreateProductCategoryDto
             {
                 Name = productCategoryViewModel.Name,
-                // fix
-                Image = null
+                Image = await _imageConverter.ConvertImageToByteArray(productCategoryViewModel.Image)
             };
 
             try
@@ -78,14 +80,62 @@ namespace Delpin.Mvc.Controllers
             }
         }
 
+        public async Task<IActionResult> Update(Guid id)
+        {
+            var response = await _httpService.Get<ProductCategoryDto>($"ProductCategories/{id}", User.GetToken());
+
+            UpdateProductCategoryViewModel updateCategoryViewModel = new UpdateProductCategoryViewModel
+            {
+                Name = response.Response.Name,
+            };
+
+            if (response.Response.Image.Length > 1)
+            {
+                updateCategoryViewModel.ImageTemp = response.Response.Image;
+            }
+
+            return View(updateCategoryViewModel);
+        }
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(Guid id, UpdateProductCategoryViewModel updateCategoryViewModel)
+        {
+            UpdateProductCategoryDto productCategoryDto = new UpdateProductCategoryDto
+            {
+                Name = updateCategoryViewModel.Name
+            };
+
+            if (updateCategoryViewModel.Image != null && updateCategoryViewModel.Image.Length > 1)
+            {
+                productCategoryDto.Image = await _imageConverter.ConvertImageToByteArray(updateCategoryViewModel.Image);
+                updateCategoryViewModel.ImageTemp = Array.Empty<byte>();
+            }
+
+            if (updateCategoryViewModel.ImageTemp != null && updateCategoryViewModel.ImageTemp.Length > 1)
+            {
+                productCategoryDto.Image = updateCategoryViewModel.ImageTemp;
+            }
+
+            var response = await _httpService.Update($"ProductCategories/{id}", productCategoryDto, User.GetToken());
+
+            if (!response.Success)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id)
         {
             var response = await _httpService.Delete($"ProductCategories/{id}", User.GetToken());
 
             if (!response.Success)
             {
-
+                return RedirectToAction("Error", "Home");
             }
 
             return RedirectToAction(nameof(Index));

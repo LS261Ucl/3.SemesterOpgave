@@ -1,13 +1,13 @@
 ﻿using Delpin.MVC.Dto.v1.ProductCategories;
 using System;
 
-namespace Delpin.MVC.Dto.v1.ProductGroups
+namespace Delpin.Mvc.Models.ProductGroups
 {
-    public class ProductGroupDto
+    public class ProductGroupViewModel
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
         public ProductCategoryDto ProductCategory { get; set; }
     }
 }

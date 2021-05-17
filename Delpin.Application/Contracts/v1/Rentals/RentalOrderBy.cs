@@ -11,8 +11,6 @@ namespace Delpin.Application.Contracts.v1.Rentals
         {
             switch (orderBy)
             {
-                case "startDate":
-                    return x => x.OrderBy(r => r.StartDate);
                 case "endDate":
                     return x => x.OrderByDescending(r => r.EndDate);
                 case "customerId":
@@ -20,7 +18,7 @@ namespace Delpin.Application.Contracts.v1.Rentals
                 case "postalCode":
                     return x => x.OrderBy(r => r.PostalCode);
                 default:
-                    return null;
+                    return x => x.OrderByDescending(r => r.StartDate);
             }
         }
     }

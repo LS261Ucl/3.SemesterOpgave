@@ -1,4 +1,5 @@
 using Delpin.Mvc.Authorization;
+using Delpin.Mvc.Services;
 using Delpin.MVC.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -33,6 +34,7 @@ namespace Delpin.Mvc
             });
             services.AddScoped<HttpClient>();
             services.AddScoped<IHttpService, HttpService>();
+            services.AddSingleton<ImageConverter>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(opt =>
             {
                 opt.LoginPath = "/Account/Login";

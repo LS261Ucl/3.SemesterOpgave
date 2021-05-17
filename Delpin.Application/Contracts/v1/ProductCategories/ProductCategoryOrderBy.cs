@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using Delpin.Application.Interfaces;
+﻿using Delpin.Application.Interfaces;
 using Delpin.Domain.Entities;
+using System;
+using System.Linq;
 
 namespace Delpin.Application.Contracts.v1.ProductCategories
 {
@@ -11,12 +11,10 @@ namespace Delpin.Application.Contracts.v1.ProductCategories
         {
             switch (orderBy)
             {
-                case "name":
-                    return x => x.OrderBy(p => p.Name);
                 case "nameDesc":
                     return x => x.OrderByDescending(p => p.Name);
                 default:
-                    return null;
+                    return x => x.OrderBy(p => p.Name);
             }
         }
     }

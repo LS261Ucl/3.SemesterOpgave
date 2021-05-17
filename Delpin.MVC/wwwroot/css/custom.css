@@ -1,0 +1,20 @@
+﻿.btn-delpin {
+    width: 100px;
+}
+
+.margin-10px-no-left {
+    margin: 10px 10px 10px 0px;
+}
+
+.image-card-size {
+    max-width: 250px;
+    height: 250px
+}
+
+.delpin-color {
+    color: #194B95;
+}
+
+.grayout {
+    opacity: 0.6; /* Real browsers */
+}

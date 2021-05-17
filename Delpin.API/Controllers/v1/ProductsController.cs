@@ -33,7 +33,7 @@ namespace Delpin.API.Controllers.v1
         public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAll(string orderBy, string productGroup)
         {
             var products = await _productRepository
-                .GetAllAsync(!string.IsNullOrEmpty(productGroup) ? x => x.ProductGroup.Name == productGroup : null,
+                .GetAllAsync(!string.IsNullOrEmpty(productGroup) ? x => x.ProductGroup.Name == productGroup : null, includes: x => x.Include(p => p.ProductGroup),
                     orderBy: new ProductOrderBy().Sorting(orderBy));
 
             return Ok(_mapper.Map<IReadOnlyList<ProductDto>>(products));
@@ -43,7 +43,7 @@ namespace Delpin.API.Controllers.v1
         public async Task<ActionResult<ProductDto>> Get(Guid id)
         {
             var products = await _productRepository.GetAsync(x => x.Id == id,
-                x => x.Include(p => p.ProductItems).ThenInclude(p => p.PostalCity));
+                x => x.Include(p => p.ProductGroup).Include(p => p.ProductItems).ThenInclude(p => p.PostalCity));
 
             if (products == null)
             {

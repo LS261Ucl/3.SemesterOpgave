@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Delpin.Mvc.Models
+namespace Delpin.Mvc.Models.ProductCategories
 {
     public class ProductCategoryViewModel
     {

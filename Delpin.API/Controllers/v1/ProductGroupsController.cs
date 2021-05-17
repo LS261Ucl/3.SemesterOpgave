@@ -4,6 +4,7 @@ using Delpin.Application.Interfaces;
 using Delpin.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -33,8 +34,8 @@ namespace Delpin.API.Controllers.v1
         public async Task<ActionResult<IReadOnlyList<ProductGroupDto>>> GetAll(string orderBy, string productCategory)
         {
             var groups = await _groupRepository
-               .GetAllAsync(!string.IsNullOrEmpty(productCategory) ? x => x.ProductCategory.Name == productCategory : null,
-                   orderBy: new ProductGroupOrderBy().Sorting(orderBy));
+               .GetAllAsync(!string.IsNullOrEmpty(productCategory) ? x => x.ProductCategory.Name == productCategory : null, x => x.Include(pg => pg.ProductCategory),
+                   new ProductGroupOrderBy().Sorting(orderBy));
 
             return Ok(_mapper.Map<IReadOnlyList<ProductGroupDto>>(groups));
         }
@@ -42,7 +43,7 @@ namespace Delpin.API.Controllers.v1
         [HttpGet("{id:guid}", Name = "GetProductGroup")]
         public async Task<ActionResult<ProductGroupDto>> Get(Guid id)
         {
-            var group = await _groupRepository.GetAsync(x => x.Id == id);
+            var group = await _groupRepository.GetAsync(x => x.Id == id, x => x.Include(pg => pg.ProductCategory));
 
             if (group == null)
             {
