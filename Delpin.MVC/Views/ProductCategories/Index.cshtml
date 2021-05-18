@@ -6,16 +6,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<script>
-    function alert() {
-        if (confirm('Vil du slette denne kategori?')) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-</script>
-
 <h1>@ViewData["Title"]</h1>
 
 <section>
@@ -36,7 +26,7 @@
                             }
                             else
                             {
-                                <img src="@(category.Image)" class="card-img image-card-size" alt="...">
+                                <img src="@(category.Image)" class="card-img image-card-size delpin-img" alt="...">
                             }
                             <div class="card-body align-items-center" style="padding: 0; padding-top: 5px">
                                 <p class="card-title" style="text-align: center">@category.Name</p>
@@ -47,7 +37,7 @@
                     {
                         <div class="text-center" style="margin-right: 10px">
                             <a asp-action="Update" asp-route-id="@category.Id" type="submit" style="display: inline" class="btn btn-secondary btn-delpin">Rediger</a>
-                            <form asp-controller="ProductCategories" style="display: inline;" method="post" onsubmit="return alert()">
+                            <form asp-controller="ProductCategories" style="display: inline;" method="post" onsubmit="return alert('Vil du slette denne kategori?')">
                                 <input asp-action="Delete" asp-route-id="@category.Id" type="submit" class="btn btn-danger btn-delpin" value="Slet" />
                             </form>
                         </div>

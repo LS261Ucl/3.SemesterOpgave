@@ -13,16 +13,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<script>
-    function alert() {
-        if (confirm('Vil du slette denne produktgruppe?')) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-</script>
-
 <h1>@categoryName</h1>
 
 <section>
@@ -45,7 +35,7 @@
                                 }
                                 else
                                 {
-                                    <img src="@(group.Image)" class="card-img image-card-size" alt="...">
+                                    <img src="@(group.Image)" class="card-img image-card-size delpin-img" alt="...">
                                 }
                                 <div class="card-body align-items-center" style="padding: 0; padding-top: 5px">
                                     <p class="card-title" style="text-align: center">@group.Name</p>
@@ -56,7 +46,7 @@
                         {
                             <div class="text-center" style="margin-right: 10px">
                                 <a asp-action="Update" asp-route-id="@group.Id" type="submit" style="display: inline" class="btn btn-secondary btn-delpin">Rediger</a>
-                                <form asp-controller="ProductCategories" style="display: inline;" method="post" onsubmit="return alert()">
+                                <form asp-controller="ProductCategories" style="display: inline;" method="post" onsubmit="return alert('Vil du slette denne gruppe?')">
                                     <input asp-action="Delete" asp-route-id="@group.Id" type="submit" class="btn btn-danger btn-delpin" value="Slet" />
                                 </form>
                             </div>

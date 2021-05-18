@@ -2,27 +2,36 @@
 @model Delpin.Mvc.Models.Products.ProductViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detaljer";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<script>
-    function alert() {
-        if (confirm('Vil du slette denne produktlinje?')) {
-            return true;
-        } else {
-            return false;
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1 class="delpin-color">@Model.Name</h1>
+        </div>
+        @if (User.IsAdmin() || User.IsSuperUser())
+        {
+            <div class="col d-flex flex-row-reverse">
+                <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-secondary btn-delpin mt-2" style="height: 40px">Opdater</a>
+            </div>
         }
-    }
-</script>
-
-<h1 class="delpin-color">@Model.Name</h1>
+    </div>
+</div>
 
 <hr />
 <div class="container">
     <div class="row">
         <div class="col">
-            <img src="@Model.Image" alt="@Model.Name" style="width: 500px; height: 500px" />
+            @if (string.IsNullOrEmpty(Model.Image))
+            {
+                <img src="@Url.Content("~/images/missing.png")" alt="Image coming soon" style="width: 500px; height: 500px" class="rounded" />
+            }
+            else
+            {
+                <img src="@Model.Image" alt="@Model.Name" class="rounded" style="width: 500px; height: 500px" />
+            }
         </div>
         <div style="border-left:1px solid rgba(0,0,0,.1);height:500px"></div>
         <div class="col pt-5">
@@ -38,6 +47,12 @@
     <hr />
     <div class="row">
         <div class="col">
+            @if (User.IsAdmin() || User.IsSuperUser())
+            {
+                <div class="mb-3">
+                    <a asp-controller="ProductItems" asp-action="Create" asp-route-productId="@Model.Id" asp-route-productName="@Model.Name" class="btn btn-primary">Ny produktlinje</a>
+                </div>
+            }
             @foreach (var productItem in Model.ProductItems.OrderByDescending(x => x.IsAvailable))
             {
                 @if (productItem.IsAvailable)
@@ -49,8 +64,10 @@
                             <a href="#" class="btn btn-primary">Tilføj til booking</a>
                             @if (User.IsAdmin() || User.IsSuperUser())
                             {
-                                <button href="#" class="btn btn-secondary btn-delpin">Opdater</button>
-                                <button href="#" class="btn btn-danger btn-delpin" onclick="return alert()">Slet</button>
+                                <a asp-controller="ProductItems" asp-action="Update" asp-route-id="@productItem.Id" asp-route-productId="@Model.Id" class="btn btn-secondary btn-delpin">Opdater</a>
+                                <form asp-controller="ProductItems" asp-action="Delete" asp-route-id="@productItem.Id" style="display: inline;" method="post" onsubmit="return alert('Vil du slette denne produktlinje?')">
+                                    <input type="submit" class="btn btn-danger btn-delpin" value="Slet" />
+                                </form>
                             }
                         </div>
                     </div>
@@ -64,8 +81,10 @@
                             <button href="#" disabled class="btn btn-secondary">Tilføj til booking</button>
                             @if (User.IsAdmin() || User.IsSuperUser())
                             {
-                                <button href="#" class="btn btn-secondary btn-delpin">Opdater</button>
-                                <button class="btn btn-danger btn-delpin" onclick="return alert()">Slet</button>
+                                <a asp-controller="ProductItems" asp-action="Update" asp-route-id="@productItem.Id" asp-route-productId="@Model.Id" class="btn btn-secondary btn-delpin">Opdater</a>
+                                <form asp-controller="ProductItems" asp-action="Delete" asp-route-id="@productItem.Id" style="display: inline;" method="post" onsubmit="return alert('Vil du slette denne produktlinje?')">
+                                    <input type="submit" class="btn btn-danger btn-delpin" value="Slet" />
+                                </form>
                             }
                         </div>
                     </div>
@@ -74,7 +93,6 @@
         </div>
     </div>
 </div>
-<div>
-    @Html.ActionLink("Opdater", "Update", new { id = Model.Id }) |
-    <a asp-action="Index" asp-route-groupName="@Model.ProductGroup.Name">Tilbage til oversigt</a>
+<div class="ml-3">
+    <a asp-action="Index" asp-route-groupName="@Model.ProductGroup.Name" class="btn btn-secondary">Tilbage til oversigt</a>
 </div>
