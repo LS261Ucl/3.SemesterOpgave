@@ -6,16 +6,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<script>
-    function alert() {
-        if (confirm('Vil du slette denne produktlinje?')) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-</script>
-
 <div class="container">
     <div class="row">
         <div class="col">
@@ -60,7 +50,7 @@
             @if (User.IsAdmin() || User.IsSuperUser())
             {
                 <div class="mb-3">
-                    <a href="#" class="btn btn-primary">Ny produktlinje</a>
+                    <a asp-controller="ProductItems" asp-action="Create" asp-route-productId="@Model.Id" asp-route-productName="@Model.Name" class="btn btn-primary">Ny produktlinje</a>
                 </div>
             }
             @foreach (var productItem in Model.ProductItems.OrderByDescending(x => x.IsAvailable))
@@ -74,8 +64,10 @@
                             <a href="#" class="btn btn-primary">Tilføj til booking</a>
                             @if (User.IsAdmin() || User.IsSuperUser())
                             {
-                                <button href="#" class="btn btn-secondary btn-delpin">Opdater</button>
-                                <button href="#" class="btn btn-danger btn-delpin" onclick="return alert()">Slet</button>
+                                <a asp-controller="ProductItems" asp-action="Update" asp-route-id="@productItem.Id" asp-route-productId="@Model.Id" class="btn btn-secondary btn-delpin">Opdater</a>
+                                <form asp-controller="ProductItems" asp-action="Delete" asp-route-id="@productItem.Id" style="display: inline;" method="post" onsubmit="return alert('Vil du slette denne produktlinje?')">
+                                    <input type="submit" class="btn btn-danger btn-delpin" value="Slet" />
+                                </form>
                             }
                         </div>
                     </div>
@@ -89,8 +81,10 @@
                             <button href="#" disabled class="btn btn-secondary">Tilføj til booking</button>
                             @if (User.IsAdmin() || User.IsSuperUser())
                             {
-                                <button href="#" class="btn btn-secondary btn-delpin">Opdater</button>
-                                <button class="btn btn-danger btn-delpin" onclick="return alert()">Slet</button>
+                                <a asp-controller="ProductItems" asp-action="Update" asp-route-id="@productItem.Id" asp-route-productId="@Model.Id" class="btn btn-secondary btn-delpin">Opdater</a>
+                                <form asp-controller="ProductItems" asp-action="Delete" asp-route-id="@productItem.Id" style="display: inline;" method="post" onsubmit="return alert('Vil du slette denne produktlinje?')">
+                                    <input type="submit" class="btn btn-danger btn-delpin" value="Slet" />
+                                </form>
                             }
                         </div>
                     </div>

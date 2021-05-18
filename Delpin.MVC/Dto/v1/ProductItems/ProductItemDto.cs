@@ -9,5 +9,6 @@ namespace Delpin.MVC.Dto.v1.ProductItems
         public bool IsAvailable { get; set; }
         public DateTime LastService { get; set; }
         public PostalCityDto PostalCity { get; set; }
+        public Guid ProductId { get; set; }
     }
 }
