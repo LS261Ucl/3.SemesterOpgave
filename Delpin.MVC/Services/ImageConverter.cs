@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace Delpin.Mvc.Services
 {
@@ -9,11 +9,9 @@ namespace Delpin.Mvc.Services
     {
         public async Task<byte[]> ConvertImageToByteArray(IFormFile image)
         {
-            using (var memoryStream = new MemoryStream())
-            {
-                await image.CopyToAsync(memoryStream);
-                return memoryStream.ToArray();
-            }
+            await using var memoryStream = new MemoryStream();
+            await image.CopyToAsync(memoryStream);
+            return memoryStream.ToArray();
         }
 
         public string ConvertByteArrayToBase64String(byte[] image)

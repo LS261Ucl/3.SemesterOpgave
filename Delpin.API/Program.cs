@@ -1,5 +1,3 @@
-using System;
-using Delpin.Domain.Entities;
 using Delpin.Domain.Entities.Identity;
 using Delpin.Infrastructure.Data;
 using Delpin.Infrastructure.Identity;
@@ -9,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Delpin.API
 {
@@ -33,13 +32,13 @@ namespace Delpin.API
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(e, "Error occured seeding the Database");
                 }
-                
+
                 try
                 {
                     var identityContext = services.GetRequiredService<DelpinIdentityContext>();
                     var userManger = services.GetRequiredService<UserManager<AppUser>>();
                     identityContext.Database.Migrate();
-                    IdentitySeedData.SeedIdentityDatabase(identityContext, userManger).Wait();
+                    IdentitySeedData.SeedIdentityDatabase(userManger).Wait();
                 }
                 catch (Exception e)
                 {

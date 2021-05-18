@@ -1,10 +1,11 @@
-﻿using Delpin.Domain.Entities;
+﻿using Delpin.Application.Interfaces;
+using Delpin.Domain.Entities;
 using System;
 using System.Linq;
 
 namespace Delpin.Application.Contracts.v1.ProductItems
 {
-    public class ProductItemOrderBy
+    public class ProductItemOrderBy : IOrderBy<ProductItem>
     {
         public Func<IQueryable<ProductItem>, IOrderedQueryable<ProductItem>> Sorting(string orderBy)
         {
