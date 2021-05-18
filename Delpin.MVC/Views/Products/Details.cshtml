@@ -2,7 +2,7 @@
 @model Delpin.Mvc.Models.Products.ProductViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detaljer";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -16,13 +16,32 @@
     }
 </script>
 
-<h1 class="delpin-color">@Model.Name</h1>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1 class="delpin-color">@Model.Name</h1>
+        </div>
+        @if (User.IsAdmin() || User.IsSuperUser())
+        {
+            <div class="col d-flex flex-row-reverse">
+                <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-secondary btn-delpin mt-2" style="height: 40px">Opdater</a>
+            </div>
+        }
+    </div>
+</div>
 
 <hr />
 <div class="container">
     <div class="row">
         <div class="col">
-            <img src="@Model.Image" alt="@Model.Name" style="width: 500px; height: 500px" />
+            @if (string.IsNullOrEmpty(Model.Image))
+            {
+                <img src="@Url.Content("~/images/missing.png")" alt="Image coming soon" style="width: 500px; height: 500px" class="rounded" />
+            }
+            else
+            {
+                <img src="@Model.Image" alt="@Model.Name" class="rounded" style="width: 500px; height: 500px" />
+            }
         </div>
         <div style="border-left:1px solid rgba(0,0,0,.1);height:500px"></div>
         <div class="col pt-5">
@@ -38,6 +57,12 @@
     <hr />
     <div class="row">
         <div class="col">
+            @if (User.IsAdmin() || User.IsSuperUser())
+            {
+                <div class="mb-3">
+                    <a href="#" class="btn btn-primary">Ny produktlinje</a>
+                </div>
+            }
             @foreach (var productItem in Model.ProductItems.OrderByDescending(x => x.IsAvailable))
             {
                 @if (productItem.IsAvailable)
@@ -74,7 +99,6 @@
         </div>
     </div>
 </div>
-<div>
-    @Html.ActionLink("Opdater", "Update", new { id = Model.Id }) |
-    <a asp-action="Index" asp-route-groupName="@Model.ProductGroup.Name">Tilbage til oversigt</a>
+<div class="ml-3">
+    <a asp-action="Index" asp-route-groupName="@Model.ProductGroup.Name" class="btn btn-secondary">Tilbage til oversigt</a>
 </div>

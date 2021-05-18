@@ -4,16 +4,16 @@
 {
     <ul class="nav navbar-nav navbar-right">
         <li class="nav-item">
-            <a class="nav-link text-dark">Hej @Context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName)!.Value</a>
+            <a class="nav-link text-light">Hej @Context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName)!.Value</a>
         </li>
         @if (Context.User.HasClaim(ClaimTypes.Role, "Admin"))
         {
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Registrer</a>
+                <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Register">Registrer</a>
             </li>
         }
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Log ud</a>
+            <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Logout">Log ud</a>
         </li>
     </ul>
 }
@@ -21,7 +21,7 @@ else
 {
     <ul class="nav navbar-nav navbar-right">
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Log ind</a>
+            <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Login">Log ind</a>
         </li>
     </ul>
 }

@@ -8,11 +8,19 @@
 
 .image-card-size {
     max-width: 250px;
-    height: 250px
+    height: 250px;
 }
 
 .delpin-color {
     color: #194B95;
+}
+
+.delpin-color-bg {
+    background-color: #194B95;
+}
+
+.delpin-img {
+    padding: 10px;
 }
 
 .grayout {
