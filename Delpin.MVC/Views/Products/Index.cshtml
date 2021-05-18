@@ -13,16 +13,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<script>
-    function alert() {
-        if (confirm('Vil du slette dette produkt?')) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-</script>
-
 <h1>@groupName</h1>
 
 <section>
@@ -56,7 +46,7 @@
                         {
                             <div class="text-center" style="margin-right: 10px">
                                 <a asp-action="Update" asp-route-id="@product.Id" type="submit" style="display: inline" class="btn btn-secondary btn-delpin">Rediger</a>
-                                <form asp-controller="ProductCategories" style="display: inline;" method="post" onsubmit="return alert()">
+                                <form asp-controller="ProductCategories" style="display: inline;" method="post" onsubmit="return alert('Vil du slette dette produkt?')">
                                     <input asp-action="Delete" asp-route-id="@product.Id" type="submit" class="btn btn-danger btn-delpin" value="Slet" />
                                 </form>
                             </div>

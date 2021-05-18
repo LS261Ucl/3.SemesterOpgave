@@ -51,6 +51,7 @@ namespace Delpin.MVC.Services
         public async Task<HttpResponseWrapper<object>> Update<T>(string url, T data, string token = null)
         {
             SetRequestHeader(token);
+
             var dataJson = JsonSerializer.Serialize(data, IgnoreNullSerializerOption());
             var stringContent = new StringContent(dataJson, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(url, stringContent);
@@ -64,6 +65,7 @@ namespace Delpin.MVC.Services
         public async Task<HttpResponseWrapper<object>> Delete(string url, string token = null)
         {
             SetRequestHeader(token);
+
             var response = await _httpClient.DeleteAsync(url);
 
             if (!response.IsSuccessStatusCode)
@@ -75,8 +77,8 @@ namespace Delpin.MVC.Services
         private async Task<T> Deserialize<T>(HttpResponseMessage httpResponse)
         {
             var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-
             string response = await httpResponse.Content.ReadAsStringAsync();
+
             return JsonSerializer.Deserialize<T>(response, serializerOptions);
         }
 
