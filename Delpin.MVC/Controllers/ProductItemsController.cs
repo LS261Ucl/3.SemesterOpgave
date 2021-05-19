@@ -1,4 +1,5 @@
 ﻿using Delpin.Mvc.Extensions;
+using Delpin.Mvc.Services;
 using Delpin.MVC.Dto.v1.ProductItems;
 using Delpin.MVC.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -10,12 +11,15 @@ namespace Delpin.Mvc.Controllers
     public class ProductItemsController : Controller
     {
         private readonly IHttpService _httpService;
+        private readonly IShoppingCartService _shoppingCartService;
 
-        public ProductItemsController(IHttpService httpService)
+        public ProductItemsController(IHttpService httpService, IShoppingCartService shoppingCartService)
         {
             _httpService = httpService;
+            _shoppingCartService = shoppingCartService;
         }
 
+        [HttpGet]
         public IActionResult Create(Guid productId, string productName)
         {
             ViewData["ProductId"] = productId;
@@ -44,6 +48,7 @@ namespace Delpin.Mvc.Controllers
             }
         }
 
+        [HttpGet]
         public async Task<IActionResult> Update(Guid id, Guid productId)
         {
             var response = await _httpService.Get<ProductItemDto>($"ProductItems/{id}", User.GetToken());
@@ -93,6 +98,32 @@ namespace Delpin.Mvc.Controllers
             await _httpService.Delete($"ProductItems/{id}", User.GetToken());
 
             return RedirectToAction("Details", "Products", new { id = productId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddToBasket(Guid itemId)
+        {
+            var response = await _httpService.Get<ProductItemDto>($"ProductItems/{itemId}", User.GetToken());
+
+            if (!response.Success)
+                return Redirect(HttpContext.Request.Headers["Referer"]);
+
+            _shoppingCartService.AddToShoppingCart(User.GetEmail(), response.Response);
+
+            return Redirect(HttpContext.Request.Headers["Referer"]);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RemoveFromBasket(Guid itemId)
+        {
+            var response = await _httpService.Get<ProductItemDto>($"ProductItems/{itemId}", User.GetToken());
+
+            if (!response.Success)
+                return Redirect(HttpContext.Request.Headers["Referer"]);
+
+            _shoppingCartService.RemoveFromShoppingCart(User.GetEmail(), response.Response);
+
+            return Redirect(HttpContext.Request.Headers["Referer"]);
         }
     }
 }

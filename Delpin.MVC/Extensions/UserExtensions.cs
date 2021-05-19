@@ -9,6 +9,11 @@ namespace Delpin.Mvc.Extensions
             return user.FindFirstValue("Token");
         }
 
+        public static string GetEmail(this ClaimsPrincipal user)
+        {
+            return user.FindFirstValue(ClaimTypes.Email);
+        }
+
         public static string GetRole(this ClaimsPrincipal user)
         {
             return user.FindFirstValue(ClaimTypes.Role);

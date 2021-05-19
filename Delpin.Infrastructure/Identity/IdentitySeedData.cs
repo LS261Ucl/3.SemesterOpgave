@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Delpin.Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Delpin.Domain.Entities;
-using Delpin.Domain.Entities.Identity;
-using Microsoft.AspNetCore.Identity;
 
 namespace Delpin.Infrastructure.Identity
 {
     public class IdentitySeedData
     {
-        public static async Task SeedIdentityDatabase(DelpinIdentityContext context, UserManager<AppUser> userManager)
+        public static async Task SeedIdentityDatabase(UserManager<AppUser> userManager)
         {
             if (!userManager.Users.Any())
             {

@@ -23,12 +23,13 @@ namespace Delpin.Mvc.Controllers
             _imageConverter = imageConverter;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index(string categoryName)
         {
             var response = await _httpService.Get<List<ProductGroupDto>>($"ProductGroups?productCategory={categoryName}",
                 User.GetToken());
 
-            List<ProductGroupViewModel> productGroupViewModels = new List<ProductGroupViewModel>();
+            var productGroupViewModels = new List<ProductGroupViewModel>();
 
             foreach (var productGroup in response.Response)
             {
@@ -53,6 +54,7 @@ namespace Delpin.Mvc.Controllers
             return View(productGroupViewModels);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Create(string categoryName, string categoryId)
         {
             if (!string.IsNullOrEmpty(categoryName) && !string.IsNullOrEmpty(categoryId))
@@ -73,7 +75,7 @@ namespace Delpin.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateProductGroupViewModel productGroupViewModel)
         {
-            CreateProductGroupDto productGroupDto = new CreateProductGroupDto
+            var productGroupDto = new CreateProductGroupDto
             {
                 Name = productGroupViewModel.Name,
                 Image = await _imageConverter.ConvertImageToByteArray(productGroupViewModel.Image),
@@ -101,11 +103,12 @@ namespace Delpin.Mvc.Controllers
             }
         }
 
+        [HttpGet]
         public async Task<IActionResult> Update(Guid id)
         {
             var response = await _httpService.Get<ProductGroupDto>($"ProductGroups/{id}", User.GetToken());
 
-            UpdateProductGroupViewModel updateGroupViewModel = new UpdateProductGroupViewModel
+            var updateGroupViewModel = new UpdateProductGroupViewModel
             {
                 Name = response.Response.Name,
                 ProductCategoryId = response.Response.ProductCategory.Id
@@ -126,7 +129,7 @@ namespace Delpin.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(Guid id, UpdateProductGroupViewModel updateGroupViewModel)
         {
-            UpdateProductGroupDto productGroupDto = new UpdateProductGroupDto
+            var productGroupDto = new UpdateProductGroupDto
             {
                 Name = updateGroupViewModel.Name,
                 ProductCategoryId = updateGroupViewModel.ProductCategoryId

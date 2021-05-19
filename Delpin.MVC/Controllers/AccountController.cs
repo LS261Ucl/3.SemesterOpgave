@@ -51,6 +51,7 @@ namespace Delpin.MVC.Controllers
 
             var claims = new List<Claim>()
             {
+                new Claim(ClaimTypes.Email, response.Response.Email),
                 new Claim(ClaimTypes.GivenName, response.Response.FullName),
                 new Claim(ClaimTypes.Role, jwt.Claims.FirstOrDefault(x => x.Type == "role")!.Value),
                 new Claim("Token", response.Response.Token)

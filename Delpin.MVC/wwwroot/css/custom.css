@@ -23,6 +23,10 @@
     padding: 10px;
 }
 
+.delpin-organge {
+    background-color: #DB9027 !important;
+}
+
 .grayout {
     opacity: 0.6; /* Real browsers */
 }

@@ -74,7 +74,7 @@ namespace Delpin.MVC.Services
             return new HttpResponseWrapper<object>(true, response.IsSuccessStatusCode, response);
         }
 
-        private async Task<T> Deserialize<T>(HttpResponseMessage httpResponse)
+        private static async Task<T> Deserialize<T>(HttpResponseMessage httpResponse)
         {
             var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             string response = await httpResponse.Content.ReadAsStringAsync();
@@ -82,7 +82,7 @@ namespace Delpin.MVC.Services
             return JsonSerializer.Deserialize<T>(response, serializerOptions);
         }
 
-        private JsonSerializerOptions IgnoreNullSerializerOption()
+        private static JsonSerializerOptions IgnoreNullSerializerOption()
         {
             var serializerOptions = new JsonSerializerOptions
             {

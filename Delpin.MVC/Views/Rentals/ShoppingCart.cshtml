@@ -1,0 +1,80 @@
+﻿@model Delpin.Mvc.Models.Rentals.CreateRentalViewModel;
+
+@{
+    ViewData["Title"] = "ShoppingCart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Indkøbskurv</h1>
+
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Produkt</th>
+            <th scope="col">Pris pr. dag</th>
+            <th scope="col">Produktgruppe</th>
+            <th>#</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Products)
+        {
+            <tr>
+                <th scope="row">@item.Name</th>
+                <td>@($"{item.Price:#.##}") kr. (eksl. moms)</td>
+                <td>@item.ProductGroup.Name</td>
+                <td><a asp-controller="ProductItems" asp-action="RemoveFromBasket" asp-route-itemId="@item.ProductItems.FirstOrDefault(x => x.ProductId == item.Id)?.Id" class="btn btn-danger">Slet</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ShoppingCart">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CustomerId" class="control-label"></label>
+                <input asp-for="CustomerId" class="form-control" />
+                <span asp-validation-for="CustomerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PostalCode" class="control-label"></label>
+                <input asp-for="PostalCode" class="form-control" />
+                <span asp-validation-for="PostalCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @for (int i = 0; i < Model.RentalLines.Count; i++)
+                {
+                    <input type="hidden" value="@Model.RentalLines[i]" id="@($"RentalLine_{i}")" name="@($"RentalLine{i}")" />
+                }
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
