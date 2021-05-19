@@ -40,6 +40,7 @@ namespace Delpin.Mvc
                 opt.AddPolicy("IsSuperUser", policy => policy.Requirements.Add(new IsInRoleRequirement("SuperUser")));
             });
 
+            services.AddSingleton<IShoppingCartService, ShoppingCartService>();
             services.AddSingleton<IAuthorizationHandler, IsInRoleHandler>();
         }
 

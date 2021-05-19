@@ -48,6 +48,7 @@ namespace Delpin.Mvc.Controllers
             return View(productCategoryViewModels);
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
             return View(new CreateProductCategoryViewModel());
@@ -80,6 +81,7 @@ namespace Delpin.Mvc.Controllers
             }
         }
 
+        [HttpGet]
         public async Task<IActionResult> Update(Guid id)
         {
             var response = await _httpService.Get<ProductCategoryDto>($"ProductCategories/{id}", User.GetToken());

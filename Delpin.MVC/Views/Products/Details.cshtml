@@ -1,4 +1,5 @@
 ﻿@using Delpin.Mvc.Extensions
+@using Delpin.MVC.Dto.v1.ProductItems
 @model Delpin.Mvc.Models.Products.ProductViewModel
 
 @{
@@ -61,7 +62,14 @@
                         <div class="card-body">
                             <h5 class="card-title">Lokation: @productItem.PostalCity.PostalCode - @productItem.PostalCity.City</h5>
                             <p class="card-text">Sidst serviceret: @productItem.LastService.ToString("d")</p>
-                            <a href="#" class="btn btn-primary">Tilføj til booking</a>
+                            @if (ViewData["ShoppingCart"] != null && (ViewData["ShoppingCart"] as List<ProductItemDto>)!.FirstOrDefault(x => x.Id == productItem.Id) != null)
+                            {
+                                <a asp-controller="ProductItems" asp-action="RemoveFromBasket" asp-route-itemId="@productItem.Id" class="btn btn-warning" style="background-color: #DB9027 !important; color: #ffffff !important">Fjern fra booking</a>
+                            }
+                            else
+                            {
+                                <a asp-controller="ProductItems" asp-action="AddToBasket" asp-route-itemId="@productItem.Id" class="btn btn-primary">Tilføj til booking</a>
+                            }
                             @if (User.IsAdmin() || User.IsSuperUser())
                             {
                                 <a asp-controller="ProductItems" asp-action="Update" asp-route-id="@productItem.Id" asp-route-productId="@Model.Id" class="btn btn-secondary btn-delpin">Opdater</a>

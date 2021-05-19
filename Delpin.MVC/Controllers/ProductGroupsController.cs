@@ -23,6 +23,7 @@ namespace Delpin.Mvc.Controllers
             _imageConverter = imageConverter;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index(string categoryName)
         {
             var response = await _httpService.Get<List<ProductGroupDto>>($"ProductGroups?productCategory={categoryName}",
@@ -53,6 +54,7 @@ namespace Delpin.Mvc.Controllers
             return View(productGroupViewModels);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Create(string categoryName, string categoryId)
         {
             if (!string.IsNullOrEmpty(categoryName) && !string.IsNullOrEmpty(categoryId))
@@ -101,6 +103,7 @@ namespace Delpin.Mvc.Controllers
             }
         }
 
+        [HttpGet]
         public async Task<IActionResult> Update(Guid id)
         {
             var response = await _httpService.Get<ProductGroupDto>($"ProductGroups/{id}", User.GetToken());

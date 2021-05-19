@@ -16,11 +16,13 @@ namespace Delpin.Mvc.Controllers
     {
         private readonly IHttpService _httpService;
         private readonly ImageConverter _imageConverter;
+        private readonly IShoppingCartService _shoppingCartService;
 
-        public ProductsController(IHttpService httpService, ImageConverter imageConverter)
+        public ProductsController(IHttpService httpService, ImageConverter imageConverter, IShoppingCartService shoppingCartService)
         {
             _httpService = httpService;
             _imageConverter = imageConverter;
+            _shoppingCartService = shoppingCartService;
         }
 
         // GET: ProductsController
@@ -63,7 +65,7 @@ namespace Delpin.Mvc.Controllers
 
             string image = string.Empty;
 
-            if (response?.Response?.Image?.Length > 0)
+            if (response.Response.Image != null && response?.Response?.Image?.Length > 0)
             {
                 image = _imageConverter.ConvertByteArrayToBase64String(response.Response.Image);
             }
@@ -78,6 +80,13 @@ namespace Delpin.Mvc.Controllers
                 ProductGroup = response.Response.ProductGroup,
                 ProductItems = response.Response.ProductItems
             };
+
+            var shoppingCart = _shoppingCartService.GetShoppingCart(User.GetEmail());
+
+            if (shoppingCart.Count > 0)
+            {
+                ViewData["ShoppingCart"] = _shoppingCartService.GetShoppingCart(User.GetEmail());
+            }
 
             return View(productViewModel);
         }
