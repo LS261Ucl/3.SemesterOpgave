@@ -1,4 +1,5 @@
-﻿using Delpin.Domain.Entities;
+﻿using Delpin.Application.Contracts.v1.Products;
+using Delpin.Domain.Entities;
 using System;
 
 namespace Delpin.Application.Contracts.v1.ProductItems
@@ -10,5 +11,6 @@ namespace Delpin.Application.Contracts.v1.ProductItems
         public DateTime LastService { get; set; }
         public PostalCity PostalCity { get; set; }
         public Guid ProductId { get; set; }
+        public ProductDto Product { get; set; }
     }
 }

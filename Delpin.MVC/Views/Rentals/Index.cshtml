@@ -11,16 +11,16 @@
     <thead>
         <tr>
             <th>
-                <p>Kundenummer</p>
+                <a asp-action="Index" asp-route-orderBy="customerId"><p>Kundenummer</p></a>
             </th>
             <th>
-                <p>Start dato</p>
+                <a asp-action="Index"><p>Start dato</p></a>
             </th>
             <th>
-                <p>Slut dato</p>
+                <a asp-action="Index" asp-route-orderBy="endDate"><p>Slut dato</p></a>
             </th>
             <th>
-                <p>Adresse</p>
+                <a asp-action="Index" asp-route-orderBy="postalCode"><p>Adresse</p></a>
             </th>
             <th></th>
         </tr>

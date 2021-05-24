@@ -25,9 +25,9 @@ namespace Delpin.Mvc.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string orderBy)
         {
-            var response = await _httpService.Get<IEnumerable<RentalDto>>("Rentals", User.GetToken());
+            var response = await _httpService.Get<IEnumerable<RentalDto>>($"Rentals{(!string.IsNullOrEmpty(orderBy) ? $"?orderBy={orderBy}" : "")}", User.GetToken());
 
             return View(response.Response);
         }
@@ -91,7 +91,7 @@ namespace Delpin.Mvc.Controllers
                     return View(rentalViewModel);
                 }
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index");
             }
             catch
             {
@@ -120,6 +120,52 @@ namespace Delpin.Mvc.Controllers
             ViewData["RentalProducts"] = rentalProducts;
 
             return View(response.Response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Update(Guid id)
+        {
+            var response = await _httpService.Get<RentalDto>($"Rentals/{id}", User.GetToken());
+
+            var updateRental = new UpdateRentalDto
+            {
+                CustomerId = response.Response.CustomerId,
+                StartDate = response.Response.StartDate,
+                EndDate = response.Response.EndDate,
+                Address = response.Response.Address,
+                PostalCode = response.Response.PostalCity.PostalCode,
+                RentalLines = new List<CreateRentalLineDto>()
+            };
+
+            List<ProductDto> rentalProducts = new List<ProductDto>();
+
+            foreach (var rentalLine in response.Response.RentalLines)
+            {
+                updateRental.RentalLines.Add(new CreateRentalLineDto { ProductItemId = rentalLine.Id });
+
+                var productResponse =
+                    await _httpService.Get<ProductDto>($"Products/{rentalLine.ProductItem.ProductId}", User.GetToken());
+
+                rentalProducts.Add(productResponse.Response);
+            }
+
+            ViewData["RentalProducts"] = rentalProducts;
+
+            return View(updateRental);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(Guid id, UpdateRentalDto rentalDto)
+        {
+            var response = await _httpService.Update($"Rentals/{id}", rentalDto, User.GetToken());
+
+            if (!response.Success)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

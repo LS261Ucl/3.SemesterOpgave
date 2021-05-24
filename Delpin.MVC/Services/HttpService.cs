@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Delpin.MVC.Services
@@ -76,7 +77,7 @@ namespace Delpin.MVC.Services
 
         private static async Task<T> Deserialize<T>(HttpResponseMessage httpResponse)
         {
-            var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, ReferenceHandler = ReferenceHandler.Preserve };
             string response = await httpResponse.Content.ReadAsStringAsync();
 
             return JsonSerializer.Deserialize<T>(response, serializerOptions);
