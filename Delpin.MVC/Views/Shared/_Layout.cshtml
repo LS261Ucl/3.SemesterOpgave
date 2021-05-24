@@ -11,21 +11,28 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark delpin-color-bg border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark delpin-color-bg border-bottom box-shadow mb-3 nav-dd">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><strong>Delpin</strong></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+              
                     <ul class="navbar-nav flex-grow-1">
+                                           
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Hjem</a>
                         </li>
+                        
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="ProductCategories" asp-action="Index">Products</a>
-                        </li>
+                            <a class="nav-link text-light " asp-area="" asp-controller="ProductCategories" asp-action="Index">Produkter</a>
+                            <ul>
+                                <li><a href="/ProductGroups?categoryName=Betonmateriel">Betonmateriel</a></li>
+                                <li><a href="/ProductGroups?categoryName=Bygningsmateriel">Bygningsmateriel</a></li>
+                            </ul>
+                        </li>                   
+                        
                     </ul>
                     <a asp-controller="Rentals" asp-action="ShoppingCart" asp-route-email="@User.GetEmail()" class="mr-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-cart3 text-white" viewBox="0 0 16 16">
@@ -34,7 +41,7 @@
                     </a>
                     <partial name="_LoginPartial" />
                 </div>
-            </div>
+            
         </nav>
     </header>
     <div class="container">
