@@ -4,14 +4,16 @@ using Delpin.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Delpin.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(DelpinContext))]
-    partial class DelpinContextModelSnapshot : ModelSnapshot
+    [Migration("20210524181120_AddedRowVersionToRentals")]
+    partial class AddedRowVersionToRentals
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

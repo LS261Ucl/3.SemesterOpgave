@@ -43,7 +43,10 @@ namespace Delpin.MVC.Services
             var response = await _httpClient.PostAsync(url, stringContent);
 
             if (!response.IsSuccessStatusCode)
+            {
                 return new HttpResponseWrapper<TResponse>(false, default, response);
+            }
+
 
             var responseDeserialized = await Deserialize<TResponse>(response);
             return new HttpResponseWrapper<TResponse>(true, responseDeserialized, response);
@@ -58,7 +61,9 @@ namespace Delpin.MVC.Services
             var response = await _httpClient.PutAsync(url, stringContent);
 
             if (!response.IsSuccessStatusCode)
-                return new HttpResponseWrapper<object>(false, default, response);
+            {
+                return new HttpResponseWrapper<object>(false, await response.Content.ReadAsStringAsync(), response);
+            }
 
             return new HttpResponseWrapper<object>(true, response.IsSuccessStatusCode, response);
         }

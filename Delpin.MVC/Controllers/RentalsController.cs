@@ -134,6 +134,7 @@ namespace Delpin.Mvc.Controllers
                 EndDate = response.Response.EndDate,
                 Address = response.Response.Address,
                 PostalCode = response.Response.PostalCity.PostalCode,
+                RowVersion = response.Response.RowVersion,
                 RentalLines = new List<CreateRentalLineDto>()
             };
 
@@ -162,7 +163,26 @@ namespace Delpin.Mvc.Controllers
 
             if (!response.Success)
             {
-                return RedirectToAction("Error", "Home");
+                var rentalResponse = await _httpService.Get<RentalDto>($"Rentals/{id}", User.GetToken());
+
+                rentalDto.RentalLines = new List<CreateRentalLineDto>();
+
+                List<ProductDto> rentalProducts = new List<ProductDto>();
+
+                foreach (var line in rentalResponse.Response.RentalLines)
+                {
+                    rentalDto.RentalLines.Add(new CreateRentalLineDto { ProductItemId = line.Id });
+
+                    var productResponse =
+                        await _httpService.Get<ProductDto>($"Products/{line.ProductItem.ProductId}", User.GetToken());
+
+                    rentalProducts.Add(productResponse.Response);
+                }
+
+                ViewData["RentalProducts"] = rentalProducts;
+
+                ModelState.AddModelError(string.Empty, (string)response.Response);
+                return View(rentalDto);
             }
 
             return RedirectToAction("Index");

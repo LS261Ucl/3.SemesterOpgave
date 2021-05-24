@@ -24,5 +24,8 @@ namespace Delpin.MVC.Dto.v1.Rentals
         public string PostalCode { get; set; }
 
         public List<CreateRentalLineDto> RentalLines { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

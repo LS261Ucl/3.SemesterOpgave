@@ -66,6 +66,29 @@ namespace Delpin.Infrastructure.Data.Repositories
             return await _context.SaveChangesAsync() > 0;
         }
 
+        public async Task<string[]> UpdateConcurrentlyAsync(T entity, byte[] rowVersion)
+        {
+            _context.Entry(entity).Property("RowVersion").OriginalValue = rowVersion;
+
+            try
+            {
+                _context.Set<T>().Update(entity);
+                await _context.SaveChangesAsync();
+                return new[] { "" };
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                return new[]
+                {
+                    "Den entitet, som du forsøgte at redigere," +
+                    " blev ændret af en anden bruger, efter at du fik den oprindelige værdi. " +
+                    "Redigeringshandlingen blev annulleret. Hvis du stadig vil redigere denne entitet, " +
+                    "så tryk tilbage og find entiteten igen.",
+                    e.Message, "409"
+                };
+            }
+        }
+
         public async Task<bool> DeleteAsync(Guid id)
         {
             var entity = await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id);

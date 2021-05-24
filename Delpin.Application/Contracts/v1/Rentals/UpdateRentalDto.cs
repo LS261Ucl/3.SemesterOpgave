@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Delpin.Application.Contracts.v1.RentalLines;
+using System;
 using System.Collections.Generic;
-using Delpin.Application.Contracts.v1.RentalLines;
+using System.ComponentModel.DataAnnotations;
 
 namespace Delpin.Application.Contracts.v1.Rentals
 {
@@ -17,5 +18,8 @@ namespace Delpin.Application.Contracts.v1.Rentals
         public string PostalCode { get; set; }
 
         public ICollection<CreateRentalLineDto> RentalLines { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

@@ -100,12 +100,13 @@ namespace Delpin.API.Controllers.v1
 
             _mapper.Map(requestDto, rentalToUpdate);
 
-            bool updated = await _rentalRepository.UpdateAsync(rentalToUpdate);
+            string[] updated = await _rentalRepository.UpdateConcurrentlyAsync(rentalToUpdate, requestDto.RowVersion);
 
-            if (!updated)
+            if (!string.IsNullOrEmpty(updated[0]))
             {
                 _logger.LogInformation($"Error updating {nameof(Rental)} id: {id}");
-                return BadRequest();
+                _logger.LogInformation(updated[1]);
+                return Conflict(updated[0]);
             }
 
             return NoContent();
