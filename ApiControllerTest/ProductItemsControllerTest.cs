@@ -1,15 +1,15 @@
-using Delpin.Infrastructure.Data;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 using Delpin.API.Controllers.v1;
-using Moq;
+using Delpin.Application.Contracts.v1.ProductItems;
 using Delpin.Application.Interfaces;
 using Delpin.Domain.Entities;
-using AutoMapper;
+using Delpin.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Threading.Tasks;
-using Delpin.Application.Contracts.v1.ProductItems;
 using Xunit;
 
 
@@ -28,7 +28,7 @@ namespace ApiControllerTest
             return delpinContext;
         }
 
-        private readonly ProductItemsController pic;        
+        private readonly ProductItemsController pic;
         private Mock<IGenericRepository<ProductItem>> _ItemRepositoryMock = new Mock<IGenericRepository<ProductItem>>();
         private Mock<IMapper> _mapperMock = new Mock<IMapper>();
         private Mock<ILogger<ProductItemsController>> _loggerMock = new Mock<ILogger<ProductItemsController>>();
@@ -67,8 +67,8 @@ namespace ApiControllerTest
                 PostalCode = "7100",
                 City = "Vejle"
             };
-                 
-      
+
+
             var productItemDto = new ProductItemDto
             {
                 Id = productItemId,
@@ -76,12 +76,12 @@ namespace ApiControllerTest
                 LastService = DateTime.Now,
                 ProductId = productId,
                 PostalCity = postalCity
-                
+
             };
-           
-       
-            _ItemRepositoryMock.Setup(expression:x => x.GetAsync(productItemId))
-                .ReturnAsync(productItemDto);
+
+
+            //_ItemRepositoryMock.Setup(expression:x => x.GetAsync(productItemId))
+            //    .ReturnAsync(productItemDto);
 
             // Act
             var productItem = await pic.Get(productItemId);
