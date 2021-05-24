@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Delpin.Application.Contracts.v1.Rentals;
 using Delpin.Application.Interfaces;
 using Delpin.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Delpin.Application.Contracts.v1.Rentals;
 
 namespace Delpin.API.Controllers.v1
 {
@@ -35,7 +35,10 @@ namespace Delpin.API.Controllers.v1
         public async Task<ActionResult<IReadOnlyList<RentalDto>>> GetAll(string orderBy)
         {
             var rentals = await _rentalRepository
-                .GetAllAsync(includes: x => x.Include(r => r.PostalCity),
+                .GetAllAsync(includes: x => x.Include(r => r.PostalCity)
+                        .Include(r => r.RentalLines)
+                        .ThenInclude(rl => rl.ProductItem)
+                        .ThenInclude(pi => pi.PostalCity),
                     orderBy: new RentalOrderBy().Sorting(orderBy));
 
             return Ok(_mapper.Map<IReadOnlyList<RentalDto>>(rentals));
@@ -45,7 +48,10 @@ namespace Delpin.API.Controllers.v1
         public async Task<ActionResult<RentalDto>> Get(Guid id)
         {
             var rental = await _rentalRepository.GetAsync(x => x.Id == id,
-                x => x.Include(r => r.PostalCity).Include(r => r.RentalLines).ThenInclude(rl => rl.ProductItem).ThenInclude(pi => pi.PostalCity));
+                x => x.Include(r => r.PostalCity)
+                    .Include(r => r.RentalLines)
+                    .ThenInclude(rl => rl.ProductItem)
+                    .ThenInclude(pi => pi.PostalCity));
 
             if (rental == null)
             {
@@ -94,12 +100,13 @@ namespace Delpin.API.Controllers.v1
 
             _mapper.Map(requestDto, rentalToUpdate);
 
-            bool updated = await _rentalRepository.UpdateAsync(rentalToUpdate);
+            string[] updated = await _rentalRepository.UpdateConcurrentlyAsync(rentalToUpdate, requestDto.RowVersion);
 
-            if (!updated)
+            if (!string.IsNullOrEmpty(updated[0]))
             {
                 _logger.LogInformation($"Error updating {nameof(Rental)} id: {id}");
-                return BadRequest();
+                _logger.LogInformation(updated[1]);
+                return Conflict(updated[0]);
             }
 
             return NoContent();

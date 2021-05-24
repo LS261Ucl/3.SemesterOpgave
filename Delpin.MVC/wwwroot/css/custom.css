@@ -32,7 +32,7 @@
     opacity: 0.6; /* Real browsers */
 }
 .text-padding {
-    padding: 20px 20px 20px 20px; 
+    padding: 20px; 
 }
 
 .delpin-color-bg-bottom{
@@ -47,13 +47,13 @@
     width:100%;
     height:60px;
 }
+
 .nav-dd p{
     color: #fff;
     line-height: 55px;     
 }
 
 .nav-dd ul li{
-    
     list-style:none;
     position: relative;
 }
@@ -75,10 +75,6 @@
 
 .nav-dd ul li:hover ul {
     display: block;       
-}
-
-.nav-dd ul li {
-     width: 180px;
 }
 
 .nav-dd ul li ul li a{

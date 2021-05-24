@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Delpin.MVC.Services
@@ -42,7 +43,10 @@ namespace Delpin.MVC.Services
             var response = await _httpClient.PostAsync(url, stringContent);
 
             if (!response.IsSuccessStatusCode)
+            {
                 return new HttpResponseWrapper<TResponse>(false, default, response);
+            }
+
 
             var responseDeserialized = await Deserialize<TResponse>(response);
             return new HttpResponseWrapper<TResponse>(true, responseDeserialized, response);
@@ -57,7 +61,9 @@ namespace Delpin.MVC.Services
             var response = await _httpClient.PutAsync(url, stringContent);
 
             if (!response.IsSuccessStatusCode)
-                return new HttpResponseWrapper<object>(false, default, response);
+            {
+                return new HttpResponseWrapper<object>(false, await response.Content.ReadAsStringAsync(), response);
+            }
 
             return new HttpResponseWrapper<object>(true, response.IsSuccessStatusCode, response);
         }
@@ -76,7 +82,7 @@ namespace Delpin.MVC.Services
 
         private static async Task<T> Deserialize<T>(HttpResponseMessage httpResponse)
         {
-            var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, ReferenceHandler = ReferenceHandler.Preserve };
             string response = await httpResponse.Content.ReadAsStringAsync();
 
             return JsonSerializer.Deserialize<T>(response, serializerOptions);

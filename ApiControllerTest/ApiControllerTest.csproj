@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Delpin.API\Delpin.API.csproj" />
     <ProjectReference Include="..\Delpin.Infrastructure\Delpin.Infrastructure.csproj" />
+    <ProjectReference Include="..\Delpin.Mvc\Delpin.Mvc.csproj" />
   </ItemGroup>
 
 </Project>

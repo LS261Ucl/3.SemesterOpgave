@@ -1,45 +1,18 @@
-﻿@using Delpin.MVC.Dto.v1.ProductItems
-@model Delpin.Mvc.Models.Rentals.CreateRentalViewModel;
+﻿@using Delpin.MVC.Dto.v1.Products
+@model Delpin.MVC.Dto.v1.Rentals.UpdateRentalDto
 
 @{
-    ViewData["Title"] = "Indkøbskurv";
+    ViewData["Title"] = "Rediger";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Indkøbskurv</h1>
+<h1>Rediger</h1>
 
 <hr />
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Produkt</th>
-            <th scope="col">Pris pr. dag</th>
-            <th scope="col">Produktgruppe</th>
-            <th>#</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Products)
-        {
-            Guid productItemId = Guid.Empty;
-
-            if (Model.RentalLines != null)
-            {
-                productItemId = Model.RentalLines.FirstOrDefault(x => item.ProductItems.Any(p => p.Id == x.ProductItemId))!.ProductItemId;
-            }
-
-            <tr>
-                <th scope="row">@item.Name</th>
-                <td>@($"{item.Price:#.##}") kr. (eksl. moms)</td>
-                <td>@item.ProductGroup.Name</td>
-                <td><a asp-controller="ProductItems" asp-action="RemoveFromBasket" asp-route-itemId="@productItemId" class="btn btn-danger">Slet</a></td>
-            </tr>
-        }
-    </tbody>
-</table>
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="ShoppingCart">
+        <form asp-action="Update">
+            <input type="hidden" asp-for="RowVersion" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="CustomerId" class="control-label"></label>
@@ -67,20 +40,42 @@
                 <span asp-validation-for="PostalCode" class="text-danger"></span>
             </div>
             <div class="form-group">
-                @for (int i = 0; i < Model.RentalLines.Count; i++)
-                {
-                    <input type="hidden" value="@Model.RentalLines[i]" id="@($"RentalLine_{i}")" name="@($"RentalLine{i}")" />
-                }
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Gem" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
+@if (ViewData["RentalProducts"] != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Produkt</th>
+                <th scope="col">Pris pr. dag</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.RentalLines)
+            {
+
+                ProductDto product = (ViewData["RentalProducts"] as List<ProductDto>)?
+                    .FirstOrDefault(x => Model.RentalLines.Any(p => p.ProductItemId == item.ProductItemId));
+
+                <tr>
+                    <th>@item.ProductItemId</th>
+                    <td>@product.Name</td>
+                    <td>@($"{product.Price:#.##}"),- DKK</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-secondary">Tilbage</a>
 </div>
 
 @section Scripts {
