@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Delpin.MVC.Dto.v1.Rentals.RentalDto>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Udlejninger</h1>
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <p>Kundenummer</p>
+            </th>
+            <th>
+                <p>Start dato</p>
+            </th>
+            <th>
+                <p>Slut dato</p>
+            </th>
+            <th>
+                <p>Adresse</p>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    <p>@item.CustomerId</p>
+                </td>
+                <td>
+                    <p>@item.StartDate.ToShortDateString()</p>
+                </td>
+                <td>
+                    <p>@item.EndDate.ToShortDateString()</p>
+                </td>
+                <td>
+                    <p>@item.Address - @item.PostalCity.PostalCode @item.PostalCity.City</p>
+                </td>
+
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Detaljer</a>
+                    <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-secondary">Rediger</a>
+                    <form asp-controller="Rentals" style="display: inline;" method="post" onsubmit="return alert('Vil du slette denne udlejning?')">
+                        <input asp-action="Delete" asp-route-id="@item.Id" type="submit" class="btn btn-danger px-4" value="Slet" />
+                    </form>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>

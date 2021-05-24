@@ -7,6 +7,7 @@ using Delpin.MVC.Dto.v1.RentalLines;
 using Delpin.MVC.Dto.v1.Rentals;
 using Delpin.MVC.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,6 +22,14 @@ namespace Delpin.Mvc.Controllers
         {
             _shoppingCartService = shoppingCartService;
             _httpService = httpService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var response = await _httpService.Get<IEnumerable<RentalDto>>("Rentals", User.GetToken());
+
+            return View(response.Response);
         }
 
         [HttpGet]
@@ -88,6 +97,43 @@ namespace Delpin.Mvc.Controllers
             {
                 return View(rentalViewModel);
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var response = await _httpService.Get<RentalDto>($"Rentals/{id}", User.GetToken());
+
+            if (!response.Success)
+                return RedirectToAction("Error", "Home");
+
+            List<ProductDto> rentalProducts = new List<ProductDto>();
+
+            foreach (var rentalLine in response.Response.RentalLines)
+            {
+                var productResponse =
+                    await _httpService.Get<ProductDto>($"Products/{rentalLine.ProductItem.ProductId}", User.GetToken());
+
+                rentalProducts.Add(productResponse.Response);
+            }
+
+            ViewData["RentalProducts"] = rentalProducts;
+
+            return View(response.Response);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var response = await _httpService.Delete($"Rentals/{id}", User.GetToken());
+
+            if (!response.Success)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            return RedirectToAction("Index", "Rentals");
         }
     }
 }

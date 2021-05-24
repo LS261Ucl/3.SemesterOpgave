@@ -1,4 +1,5 @@
-﻿@model Delpin.Mvc.Models.Rentals.CreateRentalViewModel;
+﻿@using Delpin.MVC.Dto.v1.ProductItems
+@model Delpin.Mvc.Models.Rentals.CreateRentalViewModel;
 
 @{
     ViewData["Title"] = "ShoppingCart";
@@ -20,11 +21,18 @@
     <tbody>
         @foreach (var item in Model.Products)
         {
+            Guid productItemId = Guid.Empty;
+
+            if (Model.RentalLines != null)
+            {
+                productItemId = Model.RentalLines.FirstOrDefault(x => item.ProductItems.Any(p => p.Id == x.ProductItemId))!.ProductItemId;
+            }
+
             <tr>
                 <th scope="row">@item.Name</th>
                 <td>@($"{item.Price:#.##}") kr. (eksl. moms)</td>
                 <td>@item.ProductGroup.Name</td>
-                <td><a asp-controller="ProductItems" asp-action="RemoveFromBasket" asp-route-itemId="@item.ProductItems.FirstOrDefault(x => x.ProductId == item.Id)?.Id" class="btn btn-danger">Slet</a></td>
+                <td><a asp-controller="ProductItems" asp-action="RemoveFromBasket" asp-route-itemId="@productItemId" class="btn btn-danger">Slet</a></td>
             </tr>
         }
     </tbody>
