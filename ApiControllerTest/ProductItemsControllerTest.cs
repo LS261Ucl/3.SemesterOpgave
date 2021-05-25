@@ -68,8 +68,7 @@ namespace ApiControllerTest
                 City = "Vejle"
             };
 
-
-            var productItemDto = new ProductItemDto
+            var productItem = new ProductItem
             {
                 Id = productItemId,
                 IsAvailable = true,
@@ -79,15 +78,14 @@ namespace ApiControllerTest
 
             };
 
-
-            //_ItemRepositoryMock.Setup(expression:x => x.GetAsync(productItemId))
-            //    .ReturnAsync(productItemDto);
+            _ItemRepositoryMock.Setup(x => x.GetAsync(pi => pi.Id == It.IsAny<Guid>(), null))
+                .ReturnsAsync(productItem);
 
             // Act
-            var productItem = await pic.Get(productItemId);
+            var Item = await pic.Get(productItemId);
 
             // Asseret
-            Assert.Equals(productItemId, productItem);
+            Assert.AreEqual(productItemId, productItem.Id);
 
         }
 
