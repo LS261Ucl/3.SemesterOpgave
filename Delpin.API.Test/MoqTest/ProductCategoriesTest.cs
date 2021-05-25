@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
+using AutoMapper;
 using Castle.Core.Internal;
 using Delpin.API.Controllers.v1;
 using Delpin.API.Test.Extensions;
@@ -9,12 +12,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace Delpin.API.Test
+namespace Delpin.API.Test.MoqTest
 {
     public class ProductCategoriesTest
     {
