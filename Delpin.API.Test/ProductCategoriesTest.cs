@@ -71,37 +71,12 @@ namespace Delpin.API.Test
 
             Assert.Equal(result.StatusCode, StatusCodes.Status404NotFound);
         }
-
-        //[Fact]
-        //public async Task GetAll_ShouldReturnAllCatagories_WhenCatagoriesExist()
-        //{
-            
-        //    var catagoryId = Guid.NewGuid();
-        //    var catagoryName = "test";
-        //    var catagoryMock = new Mock<ProductCategory>();
-        //    List<ProductCategory> categories = new List<ProductCategory>()
-        //    {
-        //        new ProductCategory{Id = catagoryId, Name = catagoryName}
-        //    };
-
-        //    var productCatagoryOrderBy = new ProductCategoryOrderBy();
-        //    //Test 1
-        //    //_fooRepositoryMock.Setup(o => o.GetAllAsync(It.IsAny<Expression<Func<Foo, int>>>()))
-        //     //     .ReturnsAsync(idList);
-
-        //    //_repository.SetupIgnoreArgs(x=>x.GetAllAsync(It.IsAny(y=>y!=null))).ReturnsAsync(categories);
-        //    //_repository.SetupIgnoreArgs(x => x.GetAllAsync(y=> y.Id != null,false))
-        //    // .ReturnsAsync(categories);
-
-        //    Assert.Collection(categories);
-        //}
-
-        private readonly IMapper _mapper;
+    
 
         [Fact]
         public async Task Create_ShouldReturnCatagory_WhenCatagoryIsCreatet()
         {
-            // arrange
+         
             var catagoryId = Guid.NewGuid();
             var catagoryName = "Test";
 
@@ -115,20 +90,20 @@ namespace Delpin.API.Test
                 Name = catagoryName,
             };
 
-            var catagoryMap = _mapper.Map<ProductCategory>(requestDto);
+            var catagoryMap = mapper.Map<ProductCategory>(requestDto);
             var productCategory = new ProductCategory()
             {
                 Id = catagoryId,
                 Name = catagoryName
             };
-         
-            //Does not create anything?
-            _repository.SetupIgnoreArgs(x => x.CreateAsync(catagoryMap));
-              // .Returns(Task.FromResult(productCategory)); 
             
-               
-            // act
-            //Task<ProductCategory> category = 
+
+            //Does not create anything?
+            _repository.SetupIgnoreArgs(x => x.CreateAsync(productCategory))
+                  .Returns(true);
+
+                
+                                    
             var catagory = await _productCategoriesController.Get(catagoryId);
             var result = catagory.Result as OkObjectResult;
             Assert.NotNull(result);
@@ -137,6 +112,45 @@ namespace Delpin.API.Test
             Assert.Equal(catagoryId, catagoryResult.Id);
         }
 
+        [Fact]
+        public async Task UpdateById_ShouldReturn_True()
+        {
+            
+            var catagoryTest1 = new ProductCategory()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test1"
+                
+            };
 
+            var catagoryTest2 = new ProductCategory()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test2"
+            };
+
+
+            _repository.SetupIgnoreArgs(x => x.UpdateAsync(pc => pc.Id == catagoryTest1.Id))
+                .ReturnsAsync();
+               
+        }
+
+        [Fact]
+        public async Task DeleteById_ShouldReturnNothing_WhenDeletet()
+        {
+            var catagoryId = Guid.NewGuid();
+            var catagoryName = "Test";
+
+            var productCatagory = new ProductCategory()
+            {
+                Id = catagoryId,
+                Name = catagoryName
+            };
+
+            _repository.SetupIgnoreArgs(x => x.GetAsync(pc => pc.Id == catagoryId, null))
+                .ReturnsAsync(productCatagory);
+
+            _repository.SetupIgnoreArgs(x => x.DeleteAsync(pc => pc.Id == catagoryId, null))
+        }
     }
 }
