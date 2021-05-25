@@ -36,12 +36,48 @@
 }
 
 .delpin-color-bg-bottom{
-    background-color:#808080;
+    background-color:#2b2a2a;
+   
 }
-.delpin-img-icon-boarder{
-    border-radius:10px;
-} 
 
+/* Create four equal columns that floats next to each other */
+.column1 {
+    float: left;
+    width: 25%;
+    padding: 20px;   
+}
+.column2 {
+    float: left;
+    width: 25%;
+    padding: 20px;
+}
+.column3 {
+    float: left;
+    width: 50%;
+    padding: 20px;
+}
+.subcolumn{
+    float: left;
+    width: 50%;
+   
+}
+.subcolumn1 {
+    
+    float: left;
+    width: 50%; 
+  
+}
+.subcolumn2 {
+    float: right;
+    width: 50%;
+}
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+ 
 /*...Everything is for the drop down.....*/
 .nav-dd {
     width:100%;
