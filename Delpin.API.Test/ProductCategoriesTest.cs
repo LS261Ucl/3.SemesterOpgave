@@ -9,8 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -71,86 +69,68 @@ namespace Delpin.API.Test
 
             Assert.Equal(result.StatusCode, StatusCodes.Status404NotFound);
         }
-    
+
 
         [Fact]
-        public async Task Create_ShouldReturnCatagory_WhenCatagoryIsCreatet()
+        public async Task Create_ShouldReturnCategory_WhenCategoryIsCreated()
         {
-         
-            var catagoryId = Guid.NewGuid();
-            var catagoryName = "Test";
+            var categoryName = "Test";
 
-            // Mapping profile skal udskiftes så det passer til 
-            var mockMapper = new MapperConfiguration(cfg => cfg.AddProfile(new MappingProfile()));
-            var mapper = mockMapper.CreateMapper();
-
-            var requestDto = new ProductCategoryDto()
+            var requestDto = new CreateProductCategoryDto()
             {
-                Id = catagoryId,
-                Name = catagoryName,
+                Name = categoryName
             };
 
-            var catagoryMap = mapper.Map<ProductCategory>(requestDto);
-            var productCategory = new ProductCategory()
-            {
-                Id = catagoryId,
-                Name = catagoryName
-            };
-            
+            _repository.Setup(x => x.CreateAsync(new ProductCategory { Name = categoryName }))
+                .ReturnsAsync(() => true);
 
-            //Does not create anything?
-            _repository.SetupIgnoreArgs(x => x.CreateAsync(productCategory))
-                  .Returns(true);
+            var response = await _productCategoriesController.Create(requestDto);
 
-                
-                                    
-            var catagory = await _productCategoriesController.Get(catagoryId);
-            var result = catagory.Result as OkObjectResult;
-            Assert.NotNull(result);
-            var catagoryResult = result.Value as ProductCategoryDto;
+            var result = response.Result as CreatedAtActionResult;
+            var category = result?.Value as ProductCategoryDto;
 
-            Assert.Equal(catagoryId, catagoryResult.Id);
+            Assert.Equal(categoryName, category?.Name);
         }
 
-        [Fact]
-        public async Task UpdateById_ShouldReturn_True()
-        {
-            
-            var catagoryTest1 = new ProductCategory()
-            {
-                Id = Guid.NewGuid(),
-                Name = "Test1"
-                
-            };
+        //[Fact]
+        //public async Task UpdateById_ShouldReturn_True()
+        //{
 
-            var catagoryTest2 = new ProductCategory()
-            {
-                Id = Guid.NewGuid(),
-                Name = "Test2"
-            };
+        //    var catagoryTest1 = new ProductCategory()
+        //    {
+        //        Id = Guid.NewGuid(),
+        //        Name = "Test1"
+
+        //    };
+
+        //    var catagoryTest2 = new ProductCategory()
+        //    {
+        //        Id = Guid.NewGuid(),
+        //        Name = "Test2"
+        //    };
 
 
-            _repository.SetupIgnoreArgs(x => x.UpdateAsync(pc => pc.Id == catagoryTest1.Id))
-                .ReturnsAsync();
-               
-        }
+        //    _repository.SetupIgnoreArgs(x => x.UpdateAsync(pc => pc.Id == catagoryTest1.Id))
+        //        .ReturnsAsync();
 
-        [Fact]
-        public async Task DeleteById_ShouldReturnNothing_WhenDeletet()
-        {
-            var catagoryId = Guid.NewGuid();
-            var catagoryName = "Test";
+        //}
 
-            var productCatagory = new ProductCategory()
-            {
-                Id = catagoryId,
-                Name = catagoryName
-            };
+        //[Fact]
+        //public async Task DeleteById_ShouldReturnNothing_WhenDeletet()
+        //{
+        //    var catagoryId = Guid.NewGuid();
+        //    var catagoryName = "Test";
 
-            _repository.SetupIgnoreArgs(x => x.GetAsync(pc => pc.Id == catagoryId, null))
-                .ReturnsAsync(productCatagory);
+        //    var productCatagory = new ProductCategory()
+        //    {
+        //        Id = catagoryId,
+        //        Name = catagoryName
+        //    };
 
-            _repository.SetupIgnoreArgs(x => x.DeleteAsync(pc => pc.Id == catagoryId, null))
-        }
+        //    _repository.SetupIgnoreArgs(x => x.GetAsync(pc => pc.Id == catagoryId, null))
+        //        .ReturnsAsync(productCatagory);
+
+        //    _repository.SetupIgnoreArgs(x => x.DeleteAsync(pc => pc.Id == catagoryId, null))
+        //}
     }
 }
