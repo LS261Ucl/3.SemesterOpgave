@@ -30,7 +30,7 @@ namespace Delpin.Mvc
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(opt =>
             {
                 opt.LoginPath = "/Account/Login";
-                opt.ExpireTimeSpan = TimeSpan.FromDays(5);
+                opt.ExpireTimeSpan = TimeSpan.FromDays(1);
                 opt.LogoutPath = "/Account/Logout";
             });
 
@@ -39,6 +39,8 @@ namespace Delpin.Mvc
                 opt.AddPolicy("IsAdmin", policy => policy.Requirements.Add(new IsInRoleRequirement("Admin")));
                 opt.AddPolicy("IsSuperUser", policy => policy.Requirements.Add(new IsInRoleRequirement("SuperUser")));
             });
+
+            services.AddHostedService<ShoppingCartHostedService>();
 
             services.AddSingleton<IShoppingCartService, ShoppingCartService>();
             services.AddSingleton<IAuthorizationHandler, IsInRoleHandler>();
