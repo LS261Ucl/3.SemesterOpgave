@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Text.Json.Serialization;
 
 namespace Delpin.API
 {
@@ -38,7 +39,7 @@ namespace Delpin.API
                 // Restricts all endpoints to authorized users by default
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
-            });
+            }).AddJsonOptions(opt => opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 
             services.AddSwaggerGen(c =>
             {

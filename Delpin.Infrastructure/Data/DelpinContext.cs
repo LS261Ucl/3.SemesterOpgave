@@ -20,6 +20,9 @@ namespace Delpin.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>().Property(p => p.Price).HasPrecision(10, 2);
+
+            modelBuilder.Entity<Rental>().Property(r => r.RowVersion).IsConcurrencyToken();
+
             base.OnModelCreating(modelBuilder);
         }
     }

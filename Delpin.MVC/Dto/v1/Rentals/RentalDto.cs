@@ -2,6 +2,7 @@
 using Delpin.MVC.Dto.v1.RentalLines;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Delpin.MVC.Dto.v1.Rentals
 {
@@ -14,5 +15,7 @@ namespace Delpin.MVC.Dto.v1.Rentals
         public string Address { get; set; }
         public PostalCityDto PostalCity { get; set; }
         public ICollection<RentalLineDto> RentalLines { get; set; }
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

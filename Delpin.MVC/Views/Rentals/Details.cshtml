@@ -1,0 +1,78 @@
+﻿@using Delpin.MVC.Dto.v1.Products
+@model Delpin.MVC.Dto.v1.Rentals.RentalDto
+
+@{
+    ViewData["Title"] = "Detaljer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Udlejningsdetaljer</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            UdlejningsId
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class="col-sm-2">
+            Kundenummer
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CustomerId)
+        </dd>
+        <dt class="col-sm-2">
+            Start dato
+        </dt>
+        <dd class="col-sm-10">
+            @Model.StartDate.ToShortDateString()
+        </dd>
+        <dt class="col-sm-2">
+            Slut dato
+        </dt>
+        <dd class="col-sm-10">
+            @Model.StartDate.ToShortDateString()
+        </dd>
+        <dt class="col-sm-2">
+            Adresse
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Address - @Model.PostalCity.PostalCode @Model.PostalCity.City
+        </dd>
+    </dl>
+</div>
+
+@if (ViewData["RentalProducts"] != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Produkt</th>
+                <th scope="col">Pris pr. dag</th>
+                <th scope="col">Sidst serviceret</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.RentalLines)
+            {
+
+                ProductDto product = (ViewData["RentalProducts"] as List<ProductDto>)
+                        .FirstOrDefault(x => x.Id == item.ProductItem.ProductId);
+
+
+                <tr>
+                    <th scope="row">@product.Name</th>
+                    <td>@($"{product.Price:#.##}"),- DKK</td>
+                    <td>@item.ProductItem.LastService.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div>
+    <a asp-action="Index" class="btn btn-primary">Tilbage</a>
+    <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-secondary">Rediger</a>
+</div>
