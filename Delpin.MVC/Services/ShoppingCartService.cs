@@ -37,7 +37,7 @@ namespace Delpin.Mvc.Services
 
             productItems?.Remove(itemToRemove);
 
-            _shoppingCarts.TryAdd(email, productItems);
+            _shoppingCarts[email] = productItems;
         }
 
         public List<ProductItemDto> GetShoppingCart(string email)

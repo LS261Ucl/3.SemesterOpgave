@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Delpin.Domain.Entities
@@ -16,5 +17,8 @@ namespace Delpin.Domain.Entities
         public PostalCity PostalCity { get; set; }
 
         public ICollection<RentalLine> RentalLines { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

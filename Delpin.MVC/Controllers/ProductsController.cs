@@ -143,6 +143,7 @@ namespace Delpin.Mvc.Controllers
             }
         }
 
+        [HttpGet]
         public async Task<IActionResult> Update(Guid id)
         {
             var response = await _httpService.Get<ProductDto>($"Products/{id}", User.GetToken());
