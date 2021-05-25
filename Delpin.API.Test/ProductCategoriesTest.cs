@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Castle.Core.Internal;
 using Delpin.API.Controllers.v1;
 using Delpin.API.Test.Extensions;
 using Delpin.Application.Contracts.v1.ProductCategories;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -34,7 +36,7 @@ namespace Delpin.API.Test
         }
 
         [Fact]
-        public async Task GetById_ShouldReturnCategory_WhenCategoryExists()
+        public async Task GetById_WhenCategoryExists_ShouldReturnCategory()
         {
             var categoryId = Guid.NewGuid();
             var categoryName = "Test name";
@@ -57,7 +59,7 @@ namespace Delpin.API.Test
         }
 
         [Fact]
-        public async Task GetById_ShouldReturnNothing_WhenCategoryDoesNotExist()
+        public async Task GetById_WhenCategoryDoesNotExist_ShouldReturnNothing()
         {
             var categoryId = Guid.NewGuid();
 
@@ -72,16 +74,17 @@ namespace Delpin.API.Test
 
 
         [Fact]
-        public async Task Create_ShouldReturnCategory_WhenCategoryIsCreated()
+        public async Task Create_WhenCategoryIsCreated_ShouldReturnCategory()
         {
             var categoryName = "Test";
 
             var requestDto = new CreateProductCategoryDto()
             {
-                Name = categoryName
+                Name = categoryName,
+                Image = new byte[20]
             };
 
-            _repository.Setup(x => x.CreateAsync(new ProductCategory { Name = categoryName }))
+            _repository.Setup(x => x.CreateAsync(It.IsAny<ProductCategory>()))
                 .ReturnsAsync(() => true);
 
             var response = await _productCategoriesController.Create(requestDto);
@@ -90,47 +93,80 @@ namespace Delpin.API.Test
             var category = result?.Value as ProductCategoryDto;
 
             Assert.Equal(categoryName, category?.Name);
+            Assert.Equal(StatusCodes.Status201Created, result?.StatusCode);
         }
 
-        //[Fact]
-        //public async Task UpdateById_ShouldReturn_True()
-        //{
+        [Fact]
+        public void CreateProductCategoryDto_HasRequiredNameAttribute_ReturnsTrue()
+        {
+            var propertyInfo = typeof(CreateProductCategoryDto).GetProperty("Name");
 
-        //    var catagoryTest1 = new ProductCategory()
-        //    {
-        //        Id = Guid.NewGuid(),
-        //        Name = "Test1"
+            RequiredAttribute attribute = propertyInfo.GetAttribute<RequiredAttribute>();
 
-        //    };
+            Assert.NotNull(attribute);
+        }
 
-        //    var catagoryTest2 = new ProductCategory()
-        //    {
-        //        Id = Guid.NewGuid(),
-        //        Name = "Test2"
-        //    };
+        [Fact]
+        public async Task Update_WhenCategoryIsUpdated_ShouldReturnNoContent()
+        {
+            var updateId = Guid.NewGuid();
+            var updateDto = new UpdateProductCategoryDto
+            {
+                Name = "Update",
+                Image = new byte[23]
+            };
 
+            _repository.SetupIgnoreArgs(x => x.GetAsync(x => x.Id == updateId, null))
+                .ReturnsAsync(new ProductCategory { Name = "CategoryToUpdate" });
 
-        //    _repository.SetupIgnoreArgs(x => x.UpdateAsync(pc => pc.Id == catagoryTest1.Id))
-        //        .ReturnsAsync();
+            _repository.Setup(x => x.UpdateAsync(It.IsAny<ProductCategory>()))
+                .ReturnsAsync(() => true);
 
-        //}
+            var response = await _productCategoriesController.Update(updateId, updateDto);
 
-        //[Fact]
-        //public async Task DeleteById_ShouldReturnNothing_WhenDeletet()
-        //{
-        //    var catagoryId = Guid.NewGuid();
-        //    var catagoryName = "Test";
+            var result = response as NoContentResult;
 
-        //    var productCatagory = new ProductCategory()
-        //    {
-        //        Id = catagoryId,
-        //        Name = catagoryName
-        //    };
+            Assert.Equal(StatusCodes.Status204NoContent, result?.StatusCode);
+        }
 
-        //    _repository.SetupIgnoreArgs(x => x.GetAsync(pc => pc.Id == catagoryId, null))
-        //        .ReturnsAsync(productCatagory);
+        [Fact]
+        public async Task Update_WhenCategoryDoesNotExist_ShouldReturnNotFound()
+        {
+            var updateId = Guid.NewGuid();
+            var updateDto = new UpdateProductCategoryDto
+            {
+                Name = "Update",
+                Image = new byte[23]
+            };
 
-        //    _repository.SetupIgnoreArgs(x => x.DeleteAsync(pc => pc.Id == catagoryId, null))
-        //}
+            var response = await _productCategoriesController.Update(updateId, updateDto);
+            var result = response as NotFoundResult;
+
+            Assert.Equal(StatusCodes.Status404NotFound, result?.StatusCode);
+        }
+
+        [Fact]
+        public async Task Delete_WhenCategoryExistsDeletesCategory_ShouldReturnNoContent()
+        {
+            var deleteId = Guid.NewGuid();
+            _repository.Setup(x => x.DeleteAsync(deleteId)).ReturnsAsync(() => true);
+
+            var response = await _productCategoriesController.Delete(deleteId);
+            var result = response as NoContentResult;
+
+            Assert.Equal(StatusCodes.Status204NoContent, result?.StatusCode);
+        }
+
+        [Fact]
+        public async Task Delete_WhenCategoryDoesNotExist_ShouldReturnNotFound()
+        {
+            var deleteId = Guid.NewGuid();
+            _repository.Setup(x => x.DeleteAsync(deleteId)).ReturnsAsync(() => false);
+
+            var response = await _productCategoriesController.Delete(deleteId);
+            var result = response as NotFoundResult;
+
+            Assert.Equal(StatusCodes.Status404NotFound, result?.StatusCode);
+        }
     }
 }
