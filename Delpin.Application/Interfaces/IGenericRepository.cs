@@ -16,6 +16,6 @@ namespace Delpin.Application.Interfaces
         Task<bool> CreateAsync(T entity);
         Task<bool> UpdateAsync(T entity);
         Task<string[]> UpdateConcurrentlyAsync(T entity, byte[] rowVersion);
-        Task<bool> DeleteAsync(Guid id);
+        Task<bool> DeleteAsync(Guid id, object p);
     }
 }
