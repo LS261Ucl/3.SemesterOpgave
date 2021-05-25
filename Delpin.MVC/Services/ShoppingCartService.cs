@@ -1,4 +1,5 @@
 ﻿using Delpin.MVC.Dto.v1.ProductItems;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,12 +8,14 @@ namespace Delpin.Mvc.Services
     public class ShoppingCartService : IShoppingCartService
     {
         private readonly Dictionary<string, List<ProductItemDto>> _shoppingCarts = new Dictionary<string, List<ProductItemDto>>();
+        private readonly Dictionary<string, DateTime> _createdAt = new Dictionary<string, DateTime>();
 
         public void AddToShoppingCart(string email, ProductItemDto item)
         {
             if (!_shoppingCarts.ContainsKey(email))
             {
                 _shoppingCarts.TryAdd(email, new List<ProductItemDto> { item });
+                _createdAt.TryAdd(email, DateTime.UtcNow);
                 return;
             }
 
@@ -43,6 +46,17 @@ namespace Delpin.Mvc.Services
         public List<ProductItemDto> GetShoppingCart(string email)
         {
             return _shoppingCarts.GetValueOrDefault(email) ?? new List<ProductItemDto>();
+        }
+
+        public Dictionary<string, DateTime> GetCreatedAt()
+        {
+            return _createdAt;
+        }
+
+        public void RemoveShoppingCart(string email)
+        {
+            _shoppingCarts.Remove(email);
+            _createdAt.Remove(email);
         }
     }
 }
