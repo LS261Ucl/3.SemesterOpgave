@@ -27,26 +27,6 @@ namespace Delpin.API.Test.Extensions
             return mock.Setup(expression);
         }
 
-        public static void VerifyIgnoreArgs<T>(this Mock<T> mock,
-            Expression<Action<T>> expression, Func<Times> times = null)
-            where T : class
-        {
-            expression = new MakeAnyVisitor().VisitAndConvert(
-                expression, "VerifyIgnoreArgs");
-
-            mock.Verify(expression, times ?? Times.AtLeastOnce);
-        }
-
-        public static void VerifyIgnoreArgs<T, TResult>(this Mock<T> mock,
-            Expression<Func<T, TResult>> expression, Func<Times> times = null)
-            where T : class
-        {
-            expression = new MakeAnyVisitor().VisitAndConvert(
-                expression, "VerifyIgnoreArgs");
-
-            mock.Verify(expression, times ?? Times.AtLeastOnce);
-        }
-
         private class MakeAnyVisitor : ExpressionVisitor
         {
             protected override Expression VisitConstant(ConstantExpression node)
@@ -56,9 +36,9 @@ namespace Delpin.API.Test.Extensions
 
                 var method = typeof(It)
                     .GetMethod("IsAny")
-                    .MakeGenericMethod(node.Type);
+                    ?.MakeGenericMethod(node.Type);
 
-                return Expression.Call(method);
+                return Expression.Call(method!);
             }
         }
     }
