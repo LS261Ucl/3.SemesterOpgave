@@ -62,7 +62,7 @@ namespace Delpin.MVC.Controllers
             var authProperties = new AuthenticationProperties
             {
                 AllowRefresh = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(5),
+                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(1),
                 IsPersistent = true
             };
 

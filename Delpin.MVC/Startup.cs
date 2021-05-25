@@ -30,7 +30,7 @@ namespace Delpin.Mvc
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(opt =>
             {
                 opt.LoginPath = "/Account/Login";
-                opt.ExpireTimeSpan = TimeSpan.FromDays(5);
+                opt.ExpireTimeSpan = TimeSpan.FromDays(1);
                 opt.LogoutPath = "/Account/Logout";
             });
 
