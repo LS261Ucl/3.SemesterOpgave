@@ -1,4 +1,13 @@
 ﻿@using Delpin.Mvc.Extensions
+
+@{
+    List<string> categories = new List<string>
+{
+        "Betonmateriel", "Bygningsmateriel", "El-værktøj", "Have- og parkmateriel",
+        "Jord- og anlægsmateriel", "Lift og trailer", "Stillads og stiger", "Vogne og toiletter"
+    };
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,8 +37,10 @@
                         <li class="nav-item">
                             <a class="nav-link text-light " asp-area="" asp-controller="ProductCategories" asp-action="Index">Produkter</a>
                             <ul>
-                                <li><a href="/ProductGroups?categoryName=Betonmateriel">Betonmateriel</a></li>
-                                <li><a href="/ProductGroups?categoryName=Bygningsmateriel">Bygningsmateriel</a></li>
+                                @foreach (var category in categories)
+                                {
+                                    <li><a asp-controller="ProductGroups" asp-action="Index" asp-route-categoryName="@category">@category</a></li>
+                                }
                             </ul>
                         </li>
 
