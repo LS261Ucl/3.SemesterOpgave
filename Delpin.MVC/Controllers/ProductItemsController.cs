@@ -102,8 +102,9 @@ namespace Delpin.Mvc.Controllers
             return RedirectToAction("Details", "Products", new { id = productId });
         }
 
+        // Adds product item to the current users shopping cart
         [HttpGet]
-        public async Task<IActionResult> AddToBasket(Guid itemId)
+        public async Task<IActionResult> AddToShoppingCart(Guid itemId)
         {
             var response = await _httpService.Get<ProductItemDto>($"ProductItems/{itemId}", User.GetToken());
 
@@ -115,8 +116,9 @@ namespace Delpin.Mvc.Controllers
             return Redirect(HttpContext.Request.Headers["Referer"]);
         }
 
+        // Removes product item from the current users shopping cart
         [HttpGet]
-        public async Task<IActionResult> RemoveFromBasket(Guid itemId)
+        public async Task<IActionResult> RemoveFromShoppingCart(Guid itemId)
         {
             var response = await _httpService.Get<ProductItemDto>($"ProductItems/{itemId}", User.GetToken());
 

@@ -35,6 +35,7 @@ namespace Delpin.MVC.Controllers
             return View();
         }
 
+        // Creates a cookie that stores all the user claims as well as JWT token and signs in user.
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto loginDto)
@@ -62,8 +63,9 @@ namespace Delpin.MVC.Controllers
             var authProperties = new AuthenticationProperties
             {
                 AllowRefresh = true,
+                IssuedUtc = DateTimeOffset.UtcNow,
                 ExpiresUtc = DateTimeOffset.UtcNow.AddDays(1),
-                IsPersistent = true
+                IsPersistent = true,
             };
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,

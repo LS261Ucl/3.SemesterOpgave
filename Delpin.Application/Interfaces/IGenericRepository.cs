@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Delpin.Application.Interfaces
 {
+    // A Generic Repository that does five operations getAll, get, create, update and delete 
     public interface IGenericRepository<T> where T : BaseEntity
     {
         Task<T> GetAsync(Expression<Func<T, bool>> criteria, Func<IQueryable<T>, IIncludableQueryable<T, object>> includes = null);

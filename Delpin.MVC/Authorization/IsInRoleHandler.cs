@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 namespace Delpin.Mvc.Authorization
 {
+    // Handles the authorization request where it checks the users role against the requirement
+
     public class IsInRoleHandler : AuthorizationHandler<IsInRoleRequirement>
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsInRoleRequirement requirement)

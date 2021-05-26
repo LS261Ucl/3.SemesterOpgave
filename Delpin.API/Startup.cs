@@ -43,13 +43,14 @@ namespace Delpin.API
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
             }).AddJsonOptions(opt => opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
-
+            // added service for background tasks
             services.AddHostedService<AvailabilityHostedService>();
             services.AddScoped<IScopedProcessingService, GenericRepositoryProcessingService>();
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Delpin API", Version = "v1" });
+                // Authorization for swagger through authorization token 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",

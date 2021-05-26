@@ -21,12 +21,16 @@ namespace Delpin.Mvc
             services.AddRazorPages();
             services.AddControllersWithViews(opt =>
             {
+                // Restricts all endpoints to authorized users by default
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
             });
+
             services.AddScoped<HttpClient>();
             services.AddScoped<IHttpService, HttpService>();
             services.AddSingleton<ImageConverter>();
+
+            // Authentication Scheme for our cookie authentication
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(opt =>
             {
                 opt.LoginPath = "/Account/Login";
@@ -34,6 +38,7 @@ namespace Delpin.Mvc
                 opt.LogoutPath = "/Account/Logout";
             });
 
+            // Adding policies to the Authorization scheme
             services.AddAuthorization(opt =>
             {
                 opt.AddPolicy("IsAdmin", policy => policy.Requirements.Add(new IsInRoleRequirement("Admin")));
@@ -65,6 +70,7 @@ namespace Delpin.Mvc
 
             app.UseRouting();
 
+            // Redirect users to login page if they don't have a token or their token is expired
             app.Use(async (context, next) =>
             {
                 if (context.User.HasClaim(x => x.Type == "Token") && context.Request.Path != "/account/login")

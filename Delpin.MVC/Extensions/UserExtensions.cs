@@ -2,6 +2,8 @@
 
 namespace Delpin.Mvc.Extensions
 {
+    // Extensions for the ClaimsPrincipal (HttpContext.User) class to make it easier to access certain Claims
+
     public static class UserExtensions
     {
         public static string GetToken(this ClaimsPrincipal user)

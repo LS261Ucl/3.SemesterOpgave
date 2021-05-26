@@ -122,6 +122,7 @@ namespace Delpin.Mvc.Controllers
             return View(response.Response);
         }
 
+        // Fetches products from database and stores it in a ViewData so it can be consumed from the View
         [HttpGet]
         public async Task<IActionResult> Update(Guid id)
         {

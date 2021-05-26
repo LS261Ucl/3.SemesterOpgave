@@ -16,8 +16,10 @@ using System.Text;
 
 namespace Delpin.Infrastructure
 {
+
     public static class InfrastructureServiceExtensions
     {
+        // extend the Service so that additional "extension" methods can be written and used
         public static void RegisterInfrastructureServices(this IServiceCollection services,
             IConfiguration configuration)
         {
@@ -34,7 +36,7 @@ namespace Delpin.Infrastructure
             services.AddIdentityCore<AppUser>()
                 .AddEntityFrameworkStores<DelpinIdentityContext>()
                 .AddSignInManager<SignInManager<AppUser>>();
-
+            // Sets token parameters as extension to service 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt =>
                 {
@@ -48,7 +50,7 @@ namespace Delpin.Infrastructure
                         ValidateAudience = false
                     };
                 });
-
+            // sets extension Authorization for roles 
             services.AddAuthorization(opt =>
             {
                 opt.AddPolicy("IsAdmin",

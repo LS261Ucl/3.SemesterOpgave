@@ -1,8 +1,8 @@
 ﻿using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace Delpin.Mvc.Helpers
 {
+    // Generic wrapper for the HttpResponse that makes it easy to filter through the unnecessary data of the HttpResponse
     public class HttpResponseWrapper<T>
     {
         public bool Success { get; set; }
@@ -14,11 +14,6 @@ namespace Delpin.Mvc.Helpers
             Success = success;
             Response = response;
             HttpResponseMessage = httpResponseMessage;
-        }
-
-        public async Task<string> GetResponseBody()
-        {
-            return await HttpResponseMessage.Content.ReadAsStringAsync();
         }
     }
 }
