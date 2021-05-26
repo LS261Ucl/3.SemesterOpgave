@@ -1,0 +1,39 @@
+version: '3.4'
+
+services:
+  delpindb:
+    container_name: delpindb
+    restart: always
+    environment:
+        SA_PASSWORD: "secretpw123"
+        ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+
+  delpin.api:
+    container_name: delpin.api
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:DefaultConnection=Server=delpindb;Database=DelpinDb;User Id=sa;Password=secretpw123"
+      - "ConnectionStrings:IdentityConnection=Server=delpindb;Database=DelpinDb;User Id=sa;Password=secretpw123"
+    ports:
+      - "8001:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      - delpindb
+
+  delpin.mvc:
+    container_name: delpin.mvc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - BaseApiUrl=http://delpin.api/api/v1/
+    ports:
+      - "8002:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on: 
+      - delpin.api
