@@ -60,7 +60,7 @@ namespace Delpin.API.Test.IntegrationTest
             return loginResponse?.Token;
         }
 
-        protected JsonSerializerOptions ReferenceHandlerOptions =>
+        protected static JsonSerializerOptions ReferenceHandlerOptions =>
             new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve };
 
         // Disposes of InMemory database after each test has run
