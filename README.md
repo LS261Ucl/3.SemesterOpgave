@@ -35,3 +35,15 @@ See report for passwords
 * Kirstine Hazen Jensen
 * Kristoffer Nørlund Kruse
 * Mikkel Nøhr Buhl
+
+---
+
+**Mood Images**
+
+![Home Page](https://image.prntscr.com/image/UzALbWBYQiyBU7duoD_pZw.png)
+
+
+![Product Categories](https://image.prntscr.com/image/ZO0ylb__RiS-6KCiVCqaOQ.png)
+
+
+![Shopping Cart](https://image.prntscr.com/image/nRGhf4KoSEuTzOY3KdQucw.png)
