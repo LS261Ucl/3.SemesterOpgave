@@ -21,7 +21,7 @@ namespace Delpin.API.Services
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
+            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromHours(8));
 
             return Task.CompletedTask;
         }
