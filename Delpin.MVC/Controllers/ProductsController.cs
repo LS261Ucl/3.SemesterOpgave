@@ -5,6 +5,7 @@ using Delpin.Mvc.Services;
 using Delpin.MVC.Dto.v1.ProductGroups;
 using Delpin.MVC.Dto.v1.Products;
 using Delpin.MVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace Delpin.Mvc.Controllers
         }
 
         // GET: ProductsController
+        [HttpGet]
         public async Task<IActionResult> Index(string groupName)
         {
             var response = await _httpService.Get<List<ProductDto>>($"products?productGroup={groupName}", User.GetToken());
@@ -59,6 +61,7 @@ namespace Delpin.Mvc.Controllers
         }
 
         // GET: ProductsController/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
             var response = await _httpService.Get<ProductDto>($"products/{id}", User.GetToken());
@@ -92,6 +95,8 @@ namespace Delpin.Mvc.Controllers
         }
 
         // GET: ProductsController/Create
+        [HttpGet]
+        [Authorize(Policy = "IsSuperUser")]
         public async Task<IActionResult> Create(string groupName, string groupId)
         {
             if (!string.IsNullOrEmpty(groupName) && !string.IsNullOrEmpty(groupId))
@@ -111,6 +116,7 @@ namespace Delpin.Mvc.Controllers
         // POST: ProductsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "IsSuperUser")]
         public async Task<IActionResult> Create(CreateProductViewModel productViewModel)
         {
             CreateProductDto productDto = new CreateProductDto
@@ -144,6 +150,7 @@ namespace Delpin.Mvc.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "IsSuperUser")]
         public async Task<IActionResult> Update(Guid id)
         {
             var response = await _httpService.Get<ProductDto>($"Products/{id}", User.GetToken());
@@ -169,6 +176,7 @@ namespace Delpin.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "IsSuperUser")]
         public async Task<IActionResult> Update(Guid id, UpdateProductViewModel updateProductViewModel)
         {
             UpdateProductDto productDto = new UpdateProductDto
@@ -206,6 +214,7 @@ namespace Delpin.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "IsSuperUser")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var response = await _httpService.Delete($"Products/{id}", User.GetToken());

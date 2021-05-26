@@ -2,6 +2,7 @@
 using Delpin.Mvc.Services;
 using Delpin.MVC.Dto.v1.ProductItems;
 using Delpin.MVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -84,6 +85,7 @@ namespace Delpin.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "IsSuperUser")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var responseItem = await _httpService.Get<ProductItemDto>($"ProductItems/{id}", User.GetToken());
