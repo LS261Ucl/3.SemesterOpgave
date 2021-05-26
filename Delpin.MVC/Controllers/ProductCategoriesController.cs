@@ -22,6 +22,7 @@ namespace Delpin.Mvc.Controllers
             _imageConverter = imageConverter;
         }
 
+        // Gets list of all ProductCategories and sets the image if there are any and returns it to the view
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -56,6 +57,7 @@ namespace Delpin.Mvc.Controllers
             return View(new CreateProductCategoryViewModel());
         }
 
+        // Creates a dto from the viewmodel which is sent to the API whereas it will return the user to ProductCategories/Index
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "IsSuperUser")]
@@ -84,6 +86,7 @@ namespace Delpin.Mvc.Controllers
             }
         }
 
+        // Gets the ProductCategory from the API and then it is passed to the view
         [HttpGet]
         [Authorize(Policy = "IsSuperUser")]
         public async Task<IActionResult> Update(Guid id)
@@ -103,6 +106,7 @@ namespace Delpin.Mvc.Controllers
             return View(updateCategoryViewModel);
         }
 
+        // Creates dto from ViewModel and will update image if a new is set, or keep old if not and sends it back to API
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "IsSuperUser")]
@@ -134,6 +138,7 @@ namespace Delpin.Mvc.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Sends a Delete request to the API with the given Id
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "IsSuperUser")]

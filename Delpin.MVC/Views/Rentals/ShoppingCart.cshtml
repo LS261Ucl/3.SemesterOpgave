@@ -32,7 +32,7 @@
                 <th scope="row">@item.Name</th>
                 <td>@($"{item.Price:#.##}") kr. (eksl. moms)</td>
                 <td>@item.ProductGroup.Name</td>
-                <td><a asp-controller="ProductItems" asp-action="RemoveFromBasket" asp-route-itemId="@productItemId" class="btn btn-danger">Slet</a></td>
+                <td><a asp-controller="ProductItems" asp-action="RemoveFromShoppingCart" asp-route-itemId="@productItemId" class="btn btn-danger">Slet</a></td>
             </tr>
         }
     </tbody>

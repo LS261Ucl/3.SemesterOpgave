@@ -30,12 +30,10 @@ namespace Delpin.API.Services
         {
             _logger.LogInformation("Availability Hosted Service starting");
 
-            using (var scope = _services.CreateScope())
-            {
-                var repositoryService = scope.ServiceProvider.GetRequiredService<IScopedProcessingService>();
+            using var scope = _services.CreateScope();
+            var repositoryService = scope.ServiceProvider.GetRequiredService<IScopedProcessingService>();
 
-                await repositoryService.DoWork();
-            }
+            await repositoryService.DoWork();
         }
         // When availability Hosted Service is stopping
         public override Task StopAsync(CancellationToken cancellationToken)
