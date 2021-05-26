@@ -31,14 +31,17 @@ See report for passwords
 ---
 **Docker documentation**
 
-Run command in root directory of project with command:
+>Run command in root directory of project with command:
+
 docker-compose -f .\docker-compose.yml -f .\docker-compose.override.yml up
 
-To stop:
+>To stop:
+
 docker-compose -f .\docker-compose.yml -f .\docker-compose.override.yml down
 
-API is served on: http:localhost:8001(/swagger)
-MVC is served on: http:localhost:8002/
+-API is served on: http:localhost:8001(/swagger)
+
+-MVC is served on: http:localhost:8002/
 
 ---
 
