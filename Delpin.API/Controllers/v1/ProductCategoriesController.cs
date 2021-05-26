@@ -28,7 +28,7 @@ namespace Delpin.API.Controllers.v1
             _mapper = mapper;
             _logger = logger;
         }
-
+        // Get all product category from the database
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<ProductCategoryDto>>> GetAll(string orderBy)
         {
@@ -37,7 +37,7 @@ namespace Delpin.API.Controllers.v1
 
             return Ok(_mapper.Map<IReadOnlyList<ProductCategoryDto>>(categories));
         }
-
+        // Get product category from the database
         [HttpGet("{id:guid}", Name = "GetProductCategory")]
         public async Task<ActionResult<ProductCategoryDto>> Get(Guid id)
         {
@@ -52,7 +52,7 @@ namespace Delpin.API.Controllers.v1
 
             return Ok(_mapper.Map<ProductCategoryDto>(category));
         }
-
+        // Create product category from the database with authorize
         [Authorize(Policy = "IsSuperUser")]
         [HttpPost]
         public async Task<ActionResult<ProductCategoryDto>> Create([FromBody] CreateProductCategoryDto requestDto)
@@ -70,7 +70,7 @@ namespace Delpin.API.Controllers.v1
 
             return CreatedAtAction(nameof(Get), new { id = category.Id }, _mapper.Map<ProductCategoryDto>(category));
         }
-
+        // Update product category from the database with authorize
         [Authorize(Policy = "IsSuperUser")]
         [HttpPut("{id:guid}")]
         public async Task<ActionResult> Update(Guid id, UpdateProductCategoryDto requestDto)
@@ -95,7 +95,7 @@ namespace Delpin.API.Controllers.v1
 
             return NoContent();
         }
-
+        // Delete product category from the database with authorize
         [Authorize(Policy = "IsSuperUser")]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult> Delete(Guid id)

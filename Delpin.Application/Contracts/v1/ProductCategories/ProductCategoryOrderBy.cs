@@ -7,6 +7,7 @@ namespace Delpin.Application.Contracts.v1.ProductCategories
 {
     public class ProductCategoryOrderBy : IOrderBy<ProductCategory>
     {
+        // order by descending names 
         public Func<IQueryable<ProductCategory>, IOrderedQueryable<ProductCategory>> Sorting(string orderBy)
         {
             switch (orderBy)
