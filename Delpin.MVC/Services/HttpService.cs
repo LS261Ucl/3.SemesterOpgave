@@ -17,9 +17,12 @@ namespace Delpin.MVC.Services
         public HttpService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            // Gets the API address from appsettings.json so it can be overridden during deployment
             _httpClient.BaseAddress = new Uri(configuration.GetValue<string>("BaseApiUrl"));
         }
 
+        // Generic Get method that fetches from the API with the Url through the HttpClient
+        // Afterwards it will use the parameterized class to deserialize the response and return a HttpResponseWrapper
         public async Task<HttpResponseWrapper<T>> Get<T>(string url, string token = null)
         {
             SetRequestHeader(token);
@@ -34,6 +37,8 @@ namespace Delpin.MVC.Services
             return new HttpResponseWrapper<T>(true, responseDeserialized, response);
         }
 
+        // Generic Create method that expects an input class and expected output class
+        // Sends Post request to API with the serialized class and returns the HttpResponseWrapper
         public async Task<HttpResponseWrapper<TResponse>> Create<T, TResponse>(string url, T data, string token = null)
         {
             SetRequestHeader(token);
@@ -52,6 +57,7 @@ namespace Delpin.MVC.Services
             return new HttpResponseWrapper<TResponse>(true, responseDeserialized, response);
         }
 
+        // Generic Update method that expects an input class and sends a Put request to the Api
         public async Task<HttpResponseWrapper<object>> Update<T>(string url, T data, string token = null)
         {
             SetRequestHeader(token);
@@ -68,6 +74,7 @@ namespace Delpin.MVC.Services
             return new HttpResponseWrapper<object>(true, response.IsSuccessStatusCode, response);
         }
 
+        // Sends a Delete request to the APi with the given url. 
         public async Task<HttpResponseWrapper<object>> Delete(string url, string token = null)
         {
             SetRequestHeader(token);
@@ -80,6 +87,7 @@ namespace Delpin.MVC.Services
             return new HttpResponseWrapper<object>(true, response.IsSuccessStatusCode, response);
         }
 
+        // Deserialize HttpResponse from json to C# objects 
         private static async Task<T> Deserialize<T>(HttpResponseMessage httpResponse)
         {
             var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, ReferenceHandler = ReferenceHandler.Preserve };
@@ -98,6 +106,7 @@ namespace Delpin.MVC.Services
             return serializerOptions;
         }
 
+        // Takes a token and sets it as AuthenticationHeader to make an authenticated request to the API
         private void SetRequestHeader(string token)
         {
             if (token == null)

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace Delpin.Mvc.Services
 {
+    // Background / Hosted service that runs every 5 minutes and will purge all existing shopping carts that are over 3 hours old
+
     public class ShoppingCartHostedService : IHostedService, IDisposable
     {
         private const int ShoppingCartLifeSpanInHours = 3;
@@ -22,6 +24,7 @@ namespace Delpin.Mvc.Services
             _logger = logger;
         }
 
+        // Starts a timer that will run call UpdateShoppingCarts every 5 minutes
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Starting Shopping Cart Hosted Services");
@@ -30,6 +33,7 @@ namespace Delpin.Mvc.Services
             return Task.CompletedTask;
         }
 
+        // Runs through all shopping carts that are older than ShoppingCartLifeSpan and deletes them
         private void UpdateShoppingCarts(object state)
         {
             Interlocked.Increment(ref _executionCount);
@@ -46,6 +50,7 @@ namespace Delpin.Mvc.Services
             _logger.LogInformation($"Shopping Cart Hosted service currently running at: {_executionCount} rounds & has purged: {_purgedShoppingCarts} shopping carts");
         }
 
+        // Stops the hosted service and sets the timer on timeout indefinitely 
         public Task StopAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Stopping Shopping Cart Hosted service");
@@ -55,6 +60,7 @@ namespace Delpin.Mvc.Services
             return Task.CompletedTask;
         }
 
+        // Disposes the timer properly 
         public void Dispose()
         {
             _timer?.Dispose();

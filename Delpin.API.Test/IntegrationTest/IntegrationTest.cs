@@ -20,6 +20,7 @@ namespace Delpin.API.Test.IntegrationTest
         protected const string BaseUrl = "https://localhost:5001/api/v1/";
         private readonly IServiceProvider _serviceProvider;
 
+        // Creates WebAppFactory where it gets the DbContext service at runtime and replaces it with InMemoryDb
         protected IntegrationTest()
         {
             var appFactory = new WebApplicationFactory<Startup>().WithWebHostBuilder(builder =>
@@ -41,12 +42,14 @@ namespace Delpin.API.Test.IntegrationTest
             TestClient = appFactory.CreateClient();
         }
 
+        // Gets Jwt Token and sets it to the AuthenticationHeaderValue
         protected async Task AuthenticateAsync(string email = "mikkel@delpin.dk")
         {
             TestClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("bearer", await LoginAndGetJwtAsync(email));
         }
 
+        // Logs in user and returns Jwt token
         private async Task<string> LoginAndGetJwtAsync(string email)
         {
             var response = await TestClient.PostAsJsonAsync(BaseUrl + "account/login",
@@ -60,6 +63,7 @@ namespace Delpin.API.Test.IntegrationTest
         protected JsonSerializerOptions ReferenceHandlerOptions =>
             new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve };
 
+        // Disposes of InMemory database after each test has run
         public void Dispose()
         {
             using var serviceScope = _serviceProvider.CreateScope();

@@ -5,20 +5,11 @@ using System.Linq.Expressions;
 
 namespace Delpin.API.Test.Extensions
 {
+    // Builds expression that allows you to ignore unsupported expressions by Moq
     public static class MoqExtensions
     {
         public static ISetup<T, TResult> SetupIgnoreArgs<T, TResult>(this Mock<T> mock,
             Expression<Func<T, TResult>> expression)
-            where T : class
-        {
-            expression = new MakeAnyVisitor().VisitAndConvert(
-                expression, "SetupIgnoreArgs");
-
-            return mock.Setup(expression);
-        }
-
-        public static ISetup<T> SetupIgnoreArgs<T>(this Mock<T> mock,
-            Expression<Action<T>> expression)
             where T : class
         {
             expression = new MakeAnyVisitor().VisitAndConvert(

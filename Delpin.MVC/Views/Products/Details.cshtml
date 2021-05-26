@@ -64,11 +64,11 @@
                             <p class="card-text">Sidst serviceret: @productItem.LastService.ToString("d")</p>
                             @if (ViewData["ShoppingCart"] != null && (ViewData["ShoppingCart"] as List<ProductItemDto>)!.FirstOrDefault(x => x.Id == productItem.Id) != null)
                             {
-                                <a asp-controller="ProductItems" asp-action="RemoveFromBasket" asp-route-itemId="@productItem.Id" class="btn btn-warning" style="background-color: #DB9027 !important; color: #ffffff !important">Fjern fra booking</a>
+                                <a asp-controller="ProductItems" asp-action="RemoveFromShoppingCart" asp-route-itemId="@productItem.Id" class="btn btn-warning" style="background-color: #DB9027 !important; color: #ffffff !important">Fjern fra booking</a>
                             }
                             else
                             {
-                                <a asp-controller="ProductItems" asp-action="AddToBasket" asp-route-itemId="@productItem.Id" class="btn btn-primary">Tilføj til booking</a>
+                                <a asp-controller="ProductItems" asp-action="AddToShoppingCart" asp-route-itemId="@productItem.Id" class="btn btn-primary">Tilføj til booking</a>
                             }
                             @if (User.IsAdmin() || User.IsSuperUser())
                             {
