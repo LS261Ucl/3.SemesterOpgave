@@ -62,6 +62,7 @@ namespace Delpin.Infrastructure.Data.Repositories
 
         public async Task<bool> UpdateAsync(T entity)
         {
+            _context.Entry(entity).State = EntityState.Detached;
             _context.Set<T>().Update(entity);
             return await _context.SaveChangesAsync() > 0;
         }

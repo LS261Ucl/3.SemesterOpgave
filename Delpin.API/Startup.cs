@@ -1,3 +1,4 @@
+using Delpin.API.Services;
 using Delpin.Application;
 using Delpin.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using System.IO;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace Delpin.API
@@ -41,6 +44,9 @@ namespace Delpin.API
                 opt.Filters.Add(new AuthorizeFilter(policy));
             }).AddJsonOptions(opt => opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 
+            services.AddHostedService<AvailabilityHostedService>();
+            services.AddScoped<IScopedProcessingService, GenericRepositoryProcessingService>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Delpin API", Version = "v1" });
@@ -66,6 +72,10 @@ namespace Delpin.API
                         ArraySegment<string>.Empty
                     }
                 });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
         }
 

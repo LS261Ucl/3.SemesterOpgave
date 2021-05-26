@@ -76,12 +76,14 @@ namespace Delpin.MVC.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "IsAdmin")]
         public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Policy = "IsAdmin")]
         public async Task<IActionResult> Register(RegisterViewModel registerVm)
         {
             if (!ModelState.IsValid)

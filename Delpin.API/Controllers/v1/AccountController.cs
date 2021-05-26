@@ -30,6 +30,19 @@ namespace Delpin.API.Controllers.v1
             _tokenService = tokenService;
         }
 
+        /// <summary>
+        /// Login operation to access the applications services
+        /// </summary>
+        /// <param name="loginDto"></param>
+        /// <remarks>
+        /// Sample value of login
+        ///
+        ///     POST /Account/Login
+        ///     {
+        ///         "email" : "user@delpin.dk",
+        ///         "password" : "password"
+        ///     }
+        /// </remarks>
         [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<ActionResult<UserDto>> Login([FromBody] LoginDto loginDto)

@@ -5,6 +5,7 @@ using Delpin.Mvc.Services;
 using Delpin.MVC.Dto.v1.ProductCategories;
 using Delpin.MVC.Dto.v1.ProductGroups;
 using Delpin.MVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -55,6 +56,7 @@ namespace Delpin.Mvc.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "IsSuperUser")]
         public async Task<IActionResult> Create(string categoryName, string categoryId)
         {
             if (!string.IsNullOrEmpty(categoryName) && !string.IsNullOrEmpty(categoryId))
@@ -73,6 +75,7 @@ namespace Delpin.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "IsSuperUser")]
         public async Task<IActionResult> Create(CreateProductGroupViewModel productGroupViewModel)
         {
             var productGroupDto = new CreateProductGroupDto
@@ -104,6 +107,7 @@ namespace Delpin.Mvc.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "IsSuperUser")]
         public async Task<IActionResult> Update(Guid id)
         {
             var response = await _httpService.Get<ProductGroupDto>($"ProductGroups/{id}", User.GetToken());
@@ -127,6 +131,7 @@ namespace Delpin.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "IsSuperUser")]
         public async Task<IActionResult> Update(Guid id, UpdateProductGroupViewModel updateGroupViewModel)
         {
             var productGroupDto = new UpdateProductGroupDto
@@ -162,6 +167,7 @@ namespace Delpin.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "IsSuperUser")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var response = await _httpService.Delete($"ProductGroups/{id}", User.GetToken());
