@@ -21,8 +21,4 @@
     <ProjectReference Include="..\Delpin.Infrastructure\Delpin.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

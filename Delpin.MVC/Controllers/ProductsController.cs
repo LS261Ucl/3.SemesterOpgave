@@ -68,7 +68,7 @@ namespace Delpin.Mvc.Controllers
 
             string image = string.Empty;
 
-            if (response.Response.Image != null && response?.Response?.Image?.Length > 0)
+            if (response?.Response?.Image != null && response?.Response?.Image?.Length > 0)
             {
                 image = _imageConverter.ConvertByteArrayToBase64String(response.Response.Image);
             }

@@ -1,3 +1,4 @@
+using Delpin.API.Services;
 using Delpin.Application;
 using Delpin.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
@@ -42,6 +43,9 @@ namespace Delpin.API
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
             }).AddJsonOptions(opt => opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+
+            services.AddHostedService<AvailabilityHostedService>();
+            services.AddScoped<IScopedProcessingService, GenericRepositoryProcessingService>();
 
             services.AddSwaggerGen(c =>
             {

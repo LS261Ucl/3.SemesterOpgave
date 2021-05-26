@@ -33,7 +33,7 @@ namespace Delpin.Infrastructure.Data.Repositories
 
         public async Task<IReadOnlyList<T>> GetAllAsync(Expression<Func<T, bool>> criteria = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> includes = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null)
         {
-            IQueryable<T> query = _context.Set<T>();
+            IQueryable<T> query = _context.Set<T>().AsNoTracking();
 
             if (criteria != null)
             {
@@ -50,7 +50,7 @@ namespace Delpin.Infrastructure.Data.Repositories
                 query = orderBy(query);
             }
 
-            return await query.AsNoTracking().ToListAsync();
+            return await query.ToListAsync();
         }
 
         public async Task<bool> CreateAsync(T entity)
@@ -99,6 +99,11 @@ namespace Delpin.Infrastructure.Data.Repositories
             _context.Set<T>().Remove(entity);
 
             return await _context.SaveChangesAsync() > 0;
+        }
+
+        public void DetachEntity(T entity)
+        {
+            _context.Entry(entity).State = EntityState.Detached;
         }
     }
 }
