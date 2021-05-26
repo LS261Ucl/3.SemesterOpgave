@@ -12,7 +12,6 @@ namespace Delpin.API.Services
         private readonly ILogger<AvailabilityHostedService> _logger;
         private readonly IServiceProvider _services;
         private Timer _timer;
-        private CancellationToken _stoppingToken;
 
         public AvailabilityHostedService(ILogger<AvailabilityHostedService> logger, IServiceProvider services)
         {
@@ -22,8 +21,7 @@ namespace Delpin.API.Services
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _stoppingToken = stoppingToken;
-            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(60));
+            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
 
             return Task.CompletedTask;
         }
@@ -36,7 +34,7 @@ namespace Delpin.API.Services
             {
                 var repositoryService = scope.ServiceProvider.GetRequiredService<IScopedProcessingService>();
 
-                await repositoryService.DoWork(_stoppingToken);
+                await repositoryService.DoWork();
             }
         }
 

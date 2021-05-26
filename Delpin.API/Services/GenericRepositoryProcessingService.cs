@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Delpin.API.Services
@@ -25,12 +24,12 @@ namespace Delpin.API.Services
             _logger = logger;
         }
 
-        public async Task DoWork(CancellationToken cancellationToken)
+        public async Task DoWork()
         {
             _logger.LogInformation("Scanning for rentals that have expired to make items available");
 
             var rentalsPastEndDate = await _rentalRepository.GetAllAsync(x =>
-                    x.EndDate.Date <= DateTime.UtcNow.Date,
+                    x.EndDate <= DateTime.UtcNow && x.EndDate > DateTime.UtcNow.AddDays(-5),
                 x => x.Include(r => r.RentalLines).ThenInclude(rl => rl.ProductItem));
 
             if (rentalsPastEndDate == null || rentalsPastEndDate.Count == 0)
@@ -43,11 +42,16 @@ namespace Delpin.API.Services
 
             foreach (var rental in rentalsPastEndDate)
             {
-                if (rental.RentalLines != null && rental.RentalLines.Count > 0)
+                if (rental.RentalLines == null || rental.RentalLines.Count <= 0)
+                    continue;
+
+                foreach (var rentalLine in rental.RentalLines)
                 {
-                    productItemsToUpdate.AddRange(rental.RentalLines
-                        .Select(x => x.ProductItem)
-                        .Where(x => x.IsAvailable == false));
+                    if (productItemsToUpdate.Any(x => x.Id == rentalLine.ProductItem.Id))
+                        continue;
+
+                    if (rentalLine.ProductItem.IsAvailable == false)
+                        productItemsToUpdate.Add(rentalLine.ProductItem);
                 }
             }
 
