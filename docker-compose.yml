@@ -5,13 +5,13 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-latest
 
   delpin.api:
-    image: ${DOCKER_REGISTRY-}delpinapi
+    image: zorxh/delpin:delpinapi
     build:
       context: .
       dockerfile: Delpin.API/Dockerfile
 
   delpin.mvc:
-    image: ${DOCKER_REGISTRY-}delpinmvc
+    image: zorxh/delpin:delpinmvc
     build:
       context: .
       dockerfile: Delpin.Mvc/Dockerfile
