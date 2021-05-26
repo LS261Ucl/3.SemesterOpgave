@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  delpindb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+
+  delpin.api:
+    image: zorxh/delpin:delpinapi
+    build:
+      context: .
+      dockerfile: Delpin.API/Dockerfile
+
+  delpin.mvc:
+    image: zorxh/delpin:delpinmvc
+    build:
+      context: .
+      dockerfile: Delpin.Mvc/Dockerfile
+
