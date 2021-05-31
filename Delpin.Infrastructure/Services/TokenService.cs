@@ -17,6 +17,7 @@ namespace Delpin.Infrastructure.Services
         {
             _configuration = configuration;
         }
+
         // creates token for authentication for specific user - hardcoded 2 users for test. plans to implement database as solution along the way 
         public string CreateToken(AppUser user)
         {

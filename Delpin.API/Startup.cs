@@ -37,12 +37,14 @@ namespace Delpin.API
                 opt.AssumeDefaultVersionWhenUnspecified = true;
                 opt.ReportApiVersions = true;
             });
+
             services.AddControllers(opt =>
             {
                 // Restricts all endpoints to authorized users by default
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
             }).AddJsonOptions(opt => opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+
             // added service for background tasks
             services.AddHostedService<AvailabilityHostedService>();
             services.AddScoped<IScopedProcessingService, GenericRepositoryProcessingService>();

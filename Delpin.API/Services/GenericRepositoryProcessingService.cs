@@ -23,6 +23,7 @@ namespace Delpin.API.Services
             _rentalRepository = rentalRepository;
             _logger = logger;
         }
+
         // Finding rental end date to check for expired, and through rental lines finding product item to update availability 
         public async Task DoWork()
         {

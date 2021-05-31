@@ -4,7 +4,7 @@
 // Write your JavaScript code.
 
 function alert(message) {
-    if (confirm('Vil du slette denne produktgruppe?')) {
+    if (confirm(message)) {
         return true;
     } else {
         return false;

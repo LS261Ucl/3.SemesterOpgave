@@ -28,7 +28,6 @@ namespace Delpin.API.Controllers.v1
         public async Task<ActionResult<IReadOnlyList<PostalCity>>> GetAll()
         {
             var postalCities = await _context.PostalCities.ToListAsync();
-
             return Ok(new List<PostalCity>(postalCities.OrderBy(x => x.PostalCode)));
         }
 
