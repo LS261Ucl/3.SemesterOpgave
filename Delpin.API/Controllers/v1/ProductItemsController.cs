@@ -60,7 +60,6 @@ namespace Delpin.API.Controllers.v1
         public async Task<ActionResult<ProductItemDto>> Create([FromBody] CreateProductItemDto requestDto)
         {
             var item = _mapper.Map<ProductItem>(requestDto);
-
             bool created = await _itemRepository.CreateAsync(item);
 
             if (!created)

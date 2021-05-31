@@ -36,6 +36,7 @@ namespace Delpin.Infrastructure
             services.AddIdentityCore<AppUser>()
                 .AddEntityFrameworkStores<DelpinIdentityContext>()
                 .AddSignInManager<SignInManager<AppUser>>();
+
             // Sets token parameters as extension to service 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt =>
@@ -50,6 +51,7 @@ namespace Delpin.Infrastructure
                         ValidateAudience = false
                     };
                 });
+
             // sets extension Authorization for roles 
             services.AddAuthorization(opt =>
             {
