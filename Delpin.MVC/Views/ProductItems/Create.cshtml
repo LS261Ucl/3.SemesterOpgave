@@ -35,15 +35,14 @@
                 <input asp-for="PostalCode" class="form-control" />
                 <span asp-validation-for="PostalCode" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="display: inline">
                 <input type="submit" value="Opret" class="btn btn-primary" />
+            </div>
+            <div style="display: inline">
+                <a asp-controller="Products" asp-action="Details" asp-route-id="@ViewData["ProductId"]" class="btn btn-secondary">Tilbage</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-controller="Products" asp-action="Details" asp-route-productId="@ViewData["ProductId"]">Tilbage</a>
 </div>
 
 @section Scripts {
