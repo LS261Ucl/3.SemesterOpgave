@@ -100,7 +100,7 @@ namespace Delpin.API.Controllers.v1
 
             _mapper.Map(requestDto, rentalToUpdate);
 
-            string[] updated = await _rentalRepository.UpdateConcurrentlyAsync(rentalToUpdate, requestDto.RowVersion);
+            string[] updated = await _rentalRepository.UpdateConcurrentlyAsync(rentalToUpdate);
 
             if (!string.IsNullOrEmpty(updated[0]))
             {
