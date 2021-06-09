@@ -16,7 +16,7 @@ namespace Delpin.Application.Interfaces
             IIncludableQueryable<T, object>> includes = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null);
         Task<bool> CreateAsync(T entity);
         Task<bool> UpdateAsync(T entity);
-        Task<string[]> UpdateConcurrentlyAsync(T entity, byte[] rowVersion);
+        Task<string[]> UpdateConcurrentlyAsync(T entity);
         Task<bool> DeleteAsync(Guid id);
     }
 }

@@ -79,10 +79,8 @@ namespace Delpin.Infrastructure.Data.Repositories
 
 
         // Generic update method that will compare Row Versions and throw Concurrency Exceptions if there are any
-        public async Task<string[]> UpdateConcurrentlyAsync(T entity, byte[] rowVersion)
+        public async Task<string[]> UpdateConcurrentlyAsync(T entity)
         {
-            _context.Entry(entity).Property("RowVersion").OriginalValue = rowVersion;
-
             try
             {
                 _context.Set<T>().Update(entity);
